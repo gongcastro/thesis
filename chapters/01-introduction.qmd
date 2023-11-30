@@ -3,7 +3,32 @@ title: Introduction
 number-sections: true
 ---
 
+```{r}
+#| label: setup
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 
+# set ggplot theme and colour palette
+my_theme <- theme_minimal() +
+	theme(panel.grid = element_blank(),
+		  axis.line = element_line(colour = "black"),
+		  text = element_text(size = 12, colour = "black"),
+		  axis.text = element_text(colour = "black"))
+
+theme_set(my_theme)
+
+clrs <- c("#003f5c", "#58508d", "#bc5090", "#ff6361", "#ffa600")
+
+options(ggplot2.ordinal.fill = clrs[c(1, 4, 5)],
+		ggplot2.ordinal.colour = clrs[c(1, 4, 5)],
+		ggplot2.discrete.fill = clrs[c(1, 4, 5)],
+		ggplot2.discrete.colour = clrs[c(1, 4, 5)],
+		ggplot2.continuous.fill = ggplot2::scale_color_gradient,
+		ggplot2.continuous.colour = ggplot2::scale_color_gradient)
+
+set.seed(1234)
+```
 Some things are more easily talked about than done. Language is the opposite. Talking about *talking*---an activity sometimes referred to as *Linguistics*---is painfully difficult, but the action of *talking* feels extremely easy for most humans. In fact, learning how to talk seems trivial for most infants. How infants acquire the most complex communicative system know by humans in such a short time span is a question that has kept many folks busy, including myself for the last five years. This thesis explores a small area of language acquisition research. In particular, how infants learn a specific type of linguistic unit called *words*, and whether bilingualism (the simulatenous acquisition of two languages) impacts this process.
 
 ## Early language acquisition
@@ -63,8 +88,22 @@ Measureing word acquisition.
 
 ## The bilingual lexicon
 
+### Defining bilingualism
 
-### Definig bilingualism
+
+### Parallel activation
+
+The parallel activation hypothesis suggests that bilinguals activate both languages simultaneously during speech production or comprehension. This phenomenon is the result of the activation of lexical representations in both languages, even when only one is in use (Bobb, Von Holzen, Mayor, Mani, & Carreiras, 2020; Hoshino & Kroll, 2008; Thierry & Wu, 2007). One of the clearest examples of parallel activation was provided by Costa, Caramazza, & Sebastian-Galles (2000)‘s study, in which Catalan-Spanish monolingual and bilingual adults were asked to name pictures of common objects in Catalan, their dominant language. In half of the trials, the object labels were cognates in Catalan and Spanish (sofà-sofá, translations of sofa)–whereas in the other half of the trials labels were non-cognates (taula-mesa, translations of table). Bilingual named cognate pictures faster than non-cognate pictures, even after adjusting for the lexical frequency of the items. Importantly, monolinguals did not show this effect. These results suggested that, for the bilinguals, Spanish phonology was activated during cognate trials, facilitating the production of the Catalan word-forms. Several recent studies have also provided similar evidence in children (Bosma & Nota, 2020; Jardak & Byers-Heinlein, 2019; Poulin-Dubois, Bialystok, Blaye, Polonia, & Yott, 2013; Von Holzen & Mani, 2012). These results, taken together with Floccia et al.’s, seem to point to the fact that bilinguals’ vocabulary size tends to grow faster when both languages share a high proportion of cognate TEs, leading to a increased activation of word forms in both languages during speech processing. An interesting question is whether toddlers really know enough TEs for parallel activation to be a plausible mechanism for such effect.
+
+Despite initial claims that bilinguals do not acquire TEs during their first years of life (Volterra & Taeschner, 1978), later studies reported that not only TEs are present at early stages of lexical development, but also represent an important proportion of the early bilingual (Bilson, Yoshida, Tran, Woods, & Hills, 2015; De Houwer, Bornstein, & Putnick, 2014; Holowka, Brosseau-Lapré, & Petitto, 2002; Junker & Stockman, 2002; Pearson, Fernández, & Oller, 1993) or even trilingual (Montanari, 2010) lexicon. If parallel activation plays a role during word acquisition at these ages, it could be predicted that cognate TEs are acquired earlier than non-cognate TEs, based on the assumption that the acquisition of cognates is facilitated by the co-activation of their translation equivalent during speech processing. Indeed, cognates seem to repressent a larger proportion of bilinguals’ productive vocabulary than what expected from monolinguals’ data (Bosch & Ramon-Casas, 2014; see Fabian, 2016 for similar results in Portuguese-English bilinguals). Additionally, three-year-old children learning German and an additional language responded more accurately to cognate items than to non-cognate trials, in a task that required to select a named picture from a pool of pictures and distractors (Gampe, Kurthen, & Daum, 2018). Converging evidence was also provided by a longitudinal case study of an English-German bilingual who learnt form-similar TEs earlier than form-dissimilar TEs (Schelletter, 2002). In summary, there is evidence that during their first three years of life, children know many TEs, and seem to acquire cognate TEs earlier than non-cognate TEs.
+
+The most common notion of parallel activation in the literature, however, does not quite satisfy the explanation needed for why TEs are acquired earlier when their forms are similar across languages. Parallel activation requires the existence of two already acquired representations, one in each language, that are activated simultaneously during language production and comprehension. This is not the case in the acquisition of TEs. First, if no members of the TE have been acquired yet, it would be impossible that form-similarity plays a role during the acquisition of TEs (as no representations are available for activation during speech processing). Second, even if one of the members of the TE has been acquired, it is not possible to activate a second member that has not yet been acquired. Third, if both members have been acquired, parallel activation is possible, but cannot account for the acquisition of the TE, which has already occurred. If parallel activation plays a role during the acquisition of TEs, it must be assumed that word-form acquisition is a gradual process that does not require mature lexical representations, in line with accumulator models accounts of vocabulary acquisition (Hidaka, 2013; Kachergis, Marchman, & Frank, 2021; e.g., McMurray, 2007; Mollica & Piantadosi, 2017). This way, once one of another member of the TE has been acquired, the exposure to the acoustic form of another member can activate the former, and their form similarity would facilitate the acquisition of the latter.
+
+Moreover, within each TE, members that belong to the language of higher exposure are more likely to be acquired first. This would facilitate the subsequent acquisition of the member in the other language (the language of lower exposure). If parallel activation plays a role in the facilitation effect of cognateness during word acquisition, such effect should be stronger in the language to which children are less exposed. In support to this claim, the effect of cognateness reported by Floccia et al. only reached statistical significance in the additional language, not in English, participant’s dominant language. However, not this nor the other aforementioned studies tested the effect of cognateness on the acquisition of TEs, rather on participants’ aggregated vocabulary size. Thus, from this data it is not possible to draw any conclusions about the potential role of language dominance on the cognate facilitation effect.
+
+
+
+
 
 ### Bilingual word comprehension
 
@@ -79,6 +118,56 @@ Measureing word acquisition.
 The intersection between offline and online.
 
 Mutual exclusivity.
+
+```{r fig-bilingual-vocabulary}
+vocabulary_age <- bvq_data$vocabulary |> 
+	inner_join(select(bvq_data$logs, child_id, response_id, lp, age, version),
+			   by = join_by(child_id, response_id)) |> 
+	drop_na() |> 
+	filter(!grepl("long", version),
+		   between(age, 10, 30),
+		   lp!="Other") |> 
+	select(child_id, response_id, type, age, lp, matches("count")) |> 
+	pivot_longer(matches("count"),
+				 names_to = "measure",
+				 values_to = "count") |> 
+	mutate(measure = factor(
+		measure,
+		levels = paste0(c("total", "l1", "l2", "concept", "te"), "_count")),
+		labels = c("Total", "Dominant language", 
+				   "Non-dominant language", "Lexicalised concepts", 
+				   "Translation equivalents"))
+
+vocab_age_means <- vocabulary_age |> 
+	mutate(age = floor(age)) |> 
+	summarise(across(count, lst(mean, sd)),
+			  n = n(),
+			  .by = c(measure, type, lp, age)) |> 
+	mutate(count_se = count_sd / sqrt(n))
+
+vocabulary_age |> 
+	ggplot(aes(age, count, colour = lp)) +
+	facet_grid(type~measure, scales = "free_y") +
+	geom_point(alpha = 1/10, size = 1) +
+	geom_errorbar(data = vocab_age_means,
+				  aes(ymin = count_mean-count_se,
+				  	ymax = count_mean+count_se,
+				  	y = count_mean),
+				  width = 1/2) +
+	geom_line(data = vocab_age_means,
+			  aes(y = count_mean),
+			  size = 0.5) +
+	geom_point(data = vocab_age_means,
+			   aes(y = count_mean),
+			   size = 0.5) +
+	labs(x = "Age (months)",
+		 y = "Number of acquired words") +
+	theme(legend.position = "top")
+```
+
+Bilinguals keep up with monolinguals. Data from out lab supports this.
+
+
 
 
 
