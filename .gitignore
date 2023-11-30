@@ -47,3 +47,11 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+data/**/*.csv
+data/**/*.feather
+data/**/*.rds
+data/**/*.rda
+data/**/*.txt
+
+renv/
