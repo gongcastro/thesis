@@ -55,3 +55,6 @@ data/**/*.rda
 data/**/*.txt
 
 renv/
+
+.quarto/
+_freeze/
