@@ -9,3 +9,5 @@ options(crayon.enabled = TRUE,
 		brms.backend = "cmdstanr",
 		knitr.duplicate.label = "allow",
 		cli.progress_bar_style = "dot")
+
+source("R/utils.R")
