@@ -58,3 +58,4 @@ renv/
 
 .quarto/
 _freeze/
+/.quarto/
