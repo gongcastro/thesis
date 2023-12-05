@@ -15,8 +15,8 @@ book:
   output-file: thesis
 
 thesis:
-  title: "Word acquisitoin and recognition in the initial lexicon"
-  subtitle: "Insights from bilingualism"
+  title: "Bilingual Insights into the Initial Lexicon"
+  subtitle: "The Role of Cognates on Word Acquisition"
   author: "Gonzalo Garcia-Castro"
   date: 2023
   department: "Department of Experimental and Health Sciences"
@@ -29,8 +29,7 @@ thesis:
     Curabitur id ligula dolor. Ut convallis augue mi, sed rutrum urna facilisis eu. Nullam mollis tortor eget massa eleifend pellentesque. Etiam placerat faucibus placerat. Sed et auctor ligula. Pellentesque at dictum ante. Etiam et tempus augue. Sed id elit nibh. Aliquam erat volutpat. Sed vel sem elit.
   abstract-english: "Bilingual infants acquire words at a similar rate than monolinguals, despite facing a more complex linguistic environment. The mechanisms underlying this achievement are unclear. We investigated the possible role of cognateness---form-similarity across translation equivalents (TEs)---as a facilitator of bilingual lexical growth. We first modelled the acquisition trajectories of TEs, and found a facilitation effect of cognateness, only in the language of lower exposure. We provided a mechanistic account for this effect, rooted in the language non-selective hypothesis of lexical access. We then tested the plausibility of a central assumption in this account: that bilingual infants activate TEs in both languages in parallel, even during monolingual situations. We used a primed word recognition task in which participants were tested in exclusively one of their languages, while we covertly manipulated the cognateness of the prime words. Overall, we provide insights into the role of language non-selectivity in the initial bilingual lexicon."
   abstract-catalan: "Els infants bilingües adquireixen paraules a un ritme comparable als monolingües, malgrat exposar-se a un entorn lingüístic més complex. En aquesta tesi, investiguem el paper de la cognasticitat (similitud en forma entre traduccions equivalents o TE) com a facilitador de l'expansió del lèxic. Hem modelat les trajectòries d'adquisició de les TE, revelant un efecte de facilitació de la cognasticitat en el llengua amb menor exposició. Expliquem aquests resultats mitjançant la hipòtesi no selectiva de l'accés lèxic, i vam posar a prova la suposició que els infants bilingües activin les TE en ambdues llengües simultàniament en situacions monolingües. Vam fer servir una tasca de reconeixement de paraules en la qual els participants van ser provats exclusivament en una de les seves llengües, mentre que les paraules primes es manipulaven de manera encoberta. Aquesta tesi aporta coneixements significatius sobre el paper de la no-selectivitat lingüística en el lèxic primerenc."
-  preface: |
-    Some things are more easily talked about than done. Talking about *talking*---an activity sometimes referred to as *Linguistics*---is however painfully difficult. The action of *talking* feels extremely easy for most humans. In fact, learning how to talk seems trivial for most infants. Language is the most complex communicative system known, yet very few people are surprised by the fact that infants pick it up so early in life, and so effortlessly. Developmentalists, however, are intrigued by early language acquisition and its implications on human cognition and evolution.  How infants acquire the most complex communicative system know by humans in such a short time span is a question that has kept many folks out of unemployment, including myself for the last five years. This thesis explores a small area of language acquisition research: how infants learn a specific type of linguistic unit called *words*, and whether bilingualism---the simultaneous acquisition of two language---impacts this process. Although some of the premises and claims expressed in the present work may apply to infants acquiring language though modalities other than the auditory, the scope of the present work is the developmental trajectories of hearing, typically developing infants. For this reason, most examples and arguments concern the auditory modality, and refer to events that are specifically relevant to hearing infants, like *sound*, *hearing*, *auditory*. We invite the reader to consider the case of deaf infants as a natural extension of the point made, whenever possible. For instance, note that we adopt a broad definition of *phonology* in which a phonological system is present, with the only difference to oral languages that the forms of the linguistic units is motor-visual.
+  preface: "Some things are more easily talked about than done. Talking about *talking*---an activity sometimes referred to as *Linguistics*---is however painfully difficult. The action of *talking* feels extremely easy for most humans. In fact, learning how to talk seems trivial for most infants. Language is the most complex communicative system known, yet very few people are surprised by the fact that infants pick it up so early in life, and so effortlessly. Developmentalists, however, are intrigued by early language acquisition and its implications on human cognition and evolution.  How infants acquire the most complex communicative system know by humans in such a short time span is a question that has kept many folks out of unemployment, including myself for the last five years. This thesis explores a small area of language acquisition research: how infants learn a specific type of linguistic unit called *words*, and whether bilingualism---the simultaneous acquisition of two language---impacts this process. Although some of the premises and claims expressed in the present work may apply to infants acquiring language though modalities other than the auditory, the scope of the present work is the developmental trajectories of hearing, typically developing infants. For this reason, most examples and arguments concern the auditory modality, and refer to events that are specifically relevant to hearing infants, like *sound*, *hearing*, *auditory*. We invite the reader to consider the case of deaf infants as a natural extension of the point made, whenever possible. For instance, note that we adopt a broad definition of *phonology* in which a phonological system is present, with the only difference to oral languages that the forms of the linguistic units is motor-visual."
 format:
   upfthesis-pdf:
     page-crop: frame # cam, crop, frame
@@ -42,6 +41,9 @@ format:
       text: |
         \usepackage{tipa}
         \usepackage{booktabs}
+        \usepackage{lscape}
+        \newcommand{\blandscape}{\begin{landscape}}
+        \newcommand{\elandscape}{\end{landscape}}
   upfthesis-docx: default
 
 fig-dpi: 500
@@ -51,7 +53,7 @@ lang: en
 echo: false
 warning: false
 message: false
-freeze: true
+freeze: auto
 
 csl: "_assets/apa7.csl"
 bibliography:
