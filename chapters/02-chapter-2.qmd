@@ -15,6 +15,7 @@ library(ggdist)
 library(knitr)
 library(kableExtra)
 library(ggplot2)
+library(patchwork)
 
 options(readr.show_progress = FALSE,
 		readr.show_col_types = FALSE,
@@ -45,7 +46,7 @@ model_epreds <- read_csv(here("data", "02-chapter-2",
 							  "results", "predictions", "predictions.csv"))
 
 model_convergence <- read_csv(here("data", "02-chapter-2",
-							  "results", "posterior", "model_convergence.csv"))
+								   "results", "posterior", "model_convergence.csv"))
 
 
 # process objects
@@ -74,6 +75,12 @@ options(ggplot2.ordinal.fill = clrs[c(2, 4, 5)],
 
 set.seed(1234)
 ```
+
+::: {.callout-note}
+This Chapter has been preivously pusblished as a pre-print at PsyArxiv:
+
+Garcia-Castro, G., Avila-Varela, D., Castillejo, I., & Sebastian-Galles, N. (2023). Cognate beginnings to bilingual lexical acquisition. [https://doi.org/10.31234/osf.io/dxsmz](https://doi.org/10.31234/osf.io/dxsmz)
+:::
 
 ## Introduction
 
@@ -127,7 +134,11 @@ n_items_version <- bvq_data$pool |>
 	mutate(version = tolower(version))
 ```
 
-To collect vocabulary data from participants, we created an ad hoc questionnaire: the Barcelona Vocabulary Questionnaire (BVQ) [@garcia-castro2023bvq]. This questionnaire was inspired by the MacArthur-Bates Communicative Development Inventory [@fenson2007macarthurbates] and its adaptations to other languages, and was implemented on-line using the `formr` platform [@arslan2020formr]. This questionnaire is structured in three blocks: (1) a language exposure questionnaire, (2) a demographic survey, and (3) two vocabulary checklists. Vocabulary checklists followed a similar structure as the Oxford Communicative Developmental Inventory [@hamilton2000infant] and consisted of two lists of words, one in Catalan and one in Spanish. Both lists included items from a diverse sample of `r n_categories` semantic or functional categories. The Catalan checklist contained `r n_item_language["catalan"]` items and the Spanish checklist contained `r n_item_language["spanish"]`. Items in one language were translation equivalents of the items in the other language (e.g., the same participant responded to both gos and perro, Catalan and Spanish for dog), roughly following a one-to-one mapping. Some of the words in Catalan did not have a clear translation or had more than one possible translation in Spanish, and vice versa, therefore the unequal number of words included in the two lists.
+To collect vocabulary data from participants, we created an ad hoc questionnaire: the Barcelona Vocabulary Questionnaire (BVQ) [@garcia-castro2023bvq]. This questionnaire was inspired by the MacArthur-Bates Communicative Development Inventory [@fenson2007macarthurbates] and its adaptations to other languages, and was implemented on-line using the `formr` platform [@arslan2020formr]. This questionnaire is structured in three blocks: (1) a language exposure questionnaire, (2) a demographic survey, and (3) two vocabulary checklists. Vocabulary checklists followed a similar structure as the Oxford Communicative Developmental Inventory [@hamilton2000infant] and consisted of two lists of words, one in Catalan and one in Spanish. Both lists included items from a diverse sample of `r n_categories` semantic or functional categories. The Catalan checklist contained `r n_item_language["catalan"]` items and the Spanish checklist contained `r n_item_language["spanish"]`. Items in one language were translation equivalents of the items in the other language (e.g., the same participant responded to both *gos* and *perro*, Catalan and Spanish for dog), roughly following a one-to-one mapping. Some of the words in Catalan did not have a clear translation or had more than one possible translation in Spanish, and vice versa, therefore the unequal number of words included in the two lists.
+
+\newpage
+
+\blandscape
 
 ```{r tbl-items}
 #| label: tbl-items
@@ -135,36 +146,28 @@ To collect vocabulary data from participants, we created an ad hoc questionnaire
 #| eval: true
 #| echo: false
 #| warning: false
-col_names <- c(
-	"Semantic category",
-	"List A",
-	"List B",
-	"List C",
-	"List D",
-	"Examples"
-)
+col_names <- c("Semantic category",
+			   "List A",
+			   "List B",
+			   "List C",
+			   "List D",
+			   "Examples")
 
 tbl_data <- items |>
 	distinct(te, .keep_all = TRUE) |>
 	arrange(language, list) |>
-	mutate(
-		a = grepl("A", list),
-		b = grepl("B", list),
-		c = grepl("C", list),
-		d = grepl("D", list)
-	) |>
+	mutate(a = grepl("A", list),
+		   b = grepl("B", list),
+		   c = grepl("C", list),
+		   d = grepl("D", list)) |>
 	summarise(across(a:d, sum),
 			  items = list(meaning),
-			  .by = semantic_category
-	) |>
-	mutate(
-		total = rowSums(across(a:d)),
-		items = purrr::map(items, function(x) {
-			paste(tail(x, 2),
-				  collapse = ", "
-			)
-		})
-	) |>
+			  .by = semantic_category) |>
+	mutate(total = rowSums(across(a:d)),
+		   items = purrr::map(items, function(x) {
+		   	paste(tail(x, 5),
+		   		  collapse = ", ")
+		   })) |>
 	unnest_longer(items) |>
 	arrange(desc(total)) |>
 	relocate(semantic_category, a:d, total, items) |>
@@ -201,6 +204,8 @@ kable(tbl_data,
 			 hline_after = TRUE
 	)
 ```
+
+\elandscape
 
 For each word included in the vocabulary checklists, we asked parents to report whether their child was able to understand it, understand and say it, or did not understand or say it (checked out by default). Given the large number of words in the vocabulary checklists, we created four different subsets of the complete list of items (A, B, C, and D) Each subset contained a random but representative sub-sample of the items from the complete list (see @tbl-items). Semantic or functional categories with less than 16 items---thus resulting in less than four items after dividing it in four subsets---were not divided: all of their items were included in the four subsets. Items that were part of the trial lists of some ongoing experiments in the lab were also included in all versions. The resulting reduced list contained between `r min(n_items_version$catalan)` and `r max(n_items_version$catalan)` Catalan words, and between `r min(n_items_version$spanish)` and `r max(n_items_version$spanish)` Spanish words.
 
@@ -268,16 +273,22 @@ participants_sex <- c(table(distinct(participants, id, sex)$sex),
 					  missing = sum(is.na(distinct(participants, id, sex)$sex)))
 ```
 
-We collected `r n_responses` questionnaire responses from `r sum(n_participants)` distinct children (`r participants_sex[["female"]]` female, `r participants_sex[["male"]]` male, `r participants_sex[["missing"]]` not reported, mainly White). Participants were aged 12-32 months (M = `r round(participants_age$age_mean, 2)`, SD = `r round(participants_age$age_sd, 2)`, Range = `r round(participants_age$age_min, 2)`-`r round(participants_age$age_max, 2)`). Of those participants, `r english::words(n_participants[4])` participated four times, `r english::words(n_participants[3])` participated three times, `r n_participants[2]` participated twice, and `r n_participants[1]` participated once. Recurrent participants provided responses with a minimum of `r as.numeric(diff_responses$diff_min)` days between responses, and a maximum of `r as.numeric(diff_responses$diff_max)` days. Participants were randomly allocated into one of the four questionnaire subsets (A, B, C, or D). Each participant was always allocated to the same subset.
+We collected `r n_responses` questionnaire responses from `r sum(n_participants)` distinct children (`r participants_sex[["female"]]` female, `r participants_sex[["male"]]` male, `r participants_sex[["missing"]]` not reported, mainly White). Participants were aged 12-32 months (*M* = `r round(participants_age$age_mean, 2)`, *SD* = `r round(participants_age$age_sd, 2)`, *Range* = `r round(participants_age$age_min, 2)`--`r round(participants_age$age_max, 2)`). Of those participants, `r english::words(n_participants[4])` participated four times, `r english::words(n_participants[3])` participated three times, `r n_participants[2]` participated twice, and `r n_participants[1]` participated once. Recurrent participants provided responses with a minimum of `r as.numeric(diff_responses$diff_min)` days between responses, and a maximum of `r as.numeric(diff_responses$diff_max)` days. Participants were randomly allocated into one of the four questionnaire subsets (A, B, C, or D). Each participant was always allocated to the same subset.
 
 Participants were residents in the Metropolitan Area of Barcelona (Catalonia, Spain). Data collection took place between March 30th, 2020 and October 31th, 2022. Participants were part of the database of the Laboratori de Recerca en Infància at the Universitat Pompeu Fabra, and were contacted by e-mail or phone if their child was aged between `r floor(min(responses$age))` and `r ceiling(max(responses$age))` months, and had not been reported to be exposed more than 10% of the time to a language other than Spanish or Catalan (see @tbl-participants for a more detailed description of the sample). In total, `r n_trilingual$n[2]` participants (`r scales::percent(n_trilingual$prop[2], accuracy = 0.01)`) participants were reported to be exposed in less than 10% to a third language other than Catalan and Spanish. All families provided informed consent before participating. Upon consent, families were sent a link to the questionnaire via e-mail, which they filled from a computer, laptop, or mobile device. Filling the questionnaire took 30 minutes approximately. After completion, families were rewarded with a token of appreciation.
+
+We used the highest self-reported educational attainment of parents or caregivers as a proxy of participants' socio-economic status (SES). This information was provided by each parent or caregiver by selecting one of six possible alternatives in line with the current educational system in Spain: *sense escolaritzar/sin escolarizar* [no education], *educació primària/educación primaria* [primary school], *educació secundària/educación secundaria* [secondary school], *batxillerat/bachillerato* [complementary studies/high school], *cicles formatius/ciclos formativos* [vocational training], and *educació universitària/educación universitaria* [university degree]. Most families reported university studies (`r participants_edu["University"]`, `r scales::percent(participants_edu["University"]/sum(participants_edu))`), followed by families where the highest educational attainment were vocational studies (`r table(participants$edu_parent)["Vocational"]`, `r scales::percent(participants_edu["Vocational"]/sum(participants_edu))`), secondary education (`r participants_edu["Secondary"]`, `r scales::percent(participants_edu["Secondary"]/sum(participants_edu))`), complementary studies (`r participants_edu["Complementary"]`, `r scales::percent(participants_edu["Complementary"]/sum(participants_edu))`), primary education (`r participants_edu["Primary"]`, \<1%), and no formal education (`r participants_edu["No education"]`, \<1%).
+
+\newpage
+
+\blandscape
 
 ```{r tbl-participants}
 #| label: tbl-participants
 #| echo: false
 #| message: false
 #| warning: false
-#| tbl-cap: "Participant sample size by age and degree of exposure to Catalan."
+#| tbl-cap: "Participant sample size by age and degree of exposure to Catalan. For participants exposed to Catalan and Spanish exclusively, the proportion of Catalan exposure shown in the table is complementary to the degree of exposue to Spanish. For participants exposed to a third languages this proportion is not complementary unless one adds the degree of exposed to the third language, which never exceeded 10\\%. Participants with 100\\%, 0\\%, and 50\\% Catalan exposure would be traditionaly classified as Catalan monolingual, Spanish monolingual, and Catalan-Spanish bilingual, respectively."
 ftn <- ""
 
 col_names <- c(
@@ -341,12 +352,10 @@ kable(tbl_data,
 		"Age (months)" = ncol(tbl_data) - 1
 	)) |>
 	row_spec(nrow(tbl_data) - 1,
-			 hline_after = TRUE
-	) |>
-	add_footnote("For participants exposed to Catalan and Spanish exclusively, the proportion of Catalan exposure shown in the table is complementary to the degree of exposue to Spanish. For participants exposed to a third languages this proportion is not complementary unless one adds the degree of exposed to the third language, which never exceeded 10\\%. Participants with 100\\%, 0\\%, and 50\\% Catalan exposure would be traditionaly classified as Catalan monolingual, Spanish monolingual, and Catalan-Spanish bilingual, respectively.", notation = "none", escape = FALSE)
+			 hline_after = TRUE)
 ```
 
-We used the highest self-reported educational attainment of parents or caregivers as a proxy of participants' socio-economic status (SES). This information was provided by each parent or caregiver by selecting one of six possible alternatives in line with the current educational system in Spain: sense escolaritzar/sin escolarizar [no education], educació primària/educación primaria [primary school], educació secundària/educación secundaria [secondary school], batxillerat/bachillerato [complementary studies/high school], cicles formatius/ciclos formativos [vocational training], and educació universitària/educación universitaria [university degree]. Most families reported university studies (`r participants_edu["University"]`, `r scales::percent(participants_edu["University"]/sum(participants_edu))`), followed by families where the highest educational attainment were vocational studies (`r table(participants$edu_parent)["Vocational"]`, `r scales::percent(participants_edu["Vocational"]/sum(participants_edu))`), secondary education (`r participants_edu["Secondary"]`, `r scales::percent(participants_edu["Secondary"]/sum(participants_edu))`), complementary studies (`r participants_edu["Complementary"]`, `r scales::percent(participants_edu["Complementary"]/sum(participants_edu))`), primary education (`r participants_edu["Primary"]`, \<1%), and no formal education (`r participants_edu["No education"]`, \<1%).
+\elandscape
 
 ### Data analysis {#sec-analysis}
 
@@ -411,11 +420,14 @@ stan_version <- "2.32.1"
 
 #### Data processing
 
-We collected data for `r format(nrow(n_items), big.mark = ",")` words. We restricted the analyses to responses to nouns (`r nrow(n_items)-nrow(n_items_nouns)` items corresponding to other grammatical classes were excluded). We then excluded items with missing lexical frequency scores (*n* = `r nrow(n_items_nouns)-nrow(n_items_freq)`, see Model predictors section), items that included more than one lemma (e.g., *mono/mico* [monkey], n = `r nrow(n_items_freq)-nrow(n_items_lemma)`), multi-word items or phrases (e.g., *barrita de cereales* [cereal bar], n = `r nrow(n_items_lemma)-nrow(n_items_multi)`). Finally, we removed items without a translation in the other language (n = `r nrow(n_items_multi)-nrow(n_items_duplicated)`). This resulted in a final list of `r sum(n_items_final)` items, corresponding to `r n_items_final["Catalan"]` Catalan words and their `r n_items_final["Spanish"]` Spanish translations (`r n_te` translation equivalents). After collecting participants' responses, the final dataset consisted of `r format(n_obs, big.mark = ",")` observations, each corresponding to a single response of one participant to one item. Each translation equivalent received a median of `r round(sum_obs$median)` responses (*Min* = `r round(sum_obs$min)`, *Max* = `r round(sum_obs$max)`) from participants, both languages pooled together. Data processing and visualisation was done in R [@rcoreteam2013language, version `r r_version`].
+We collected data for `r format(nrow(n_items), big.mark = ",")` words. We restricted the analyses to responses to nouns (`r nrow(n_items)-nrow(n_items_nouns)` items corresponding to other grammatical classes were excluded). We then excluded items with missing lexical frequency scores (*n* = `r nrow(n_items_nouns)-nrow(n_items_freq)`, see Model predictors section), items that included more than one lemma (e.g., *mono/mico* [monkey], *n* = `r nrow(n_items_freq)-nrow(n_items_lemma)`), multi-word items or phrases (e.g., *barrita de cereales* [cereal bar], *n* = `r nrow(n_items_lemma)-nrow(n_items_multi)`). Finally, we removed items without a translation in the other language (*n* = `r nrow(n_items_multi)-nrow(n_items_duplicated)`). This resulted in a final list of `r sum(n_items_final)` items, corresponding to `r n_items_final["Catalan"]` Catalan words and their `r n_items_final["Spanish"]` Spanish translations (`r n_te` translation equivalents). After collecting participants' responses, the final dataset consisted of `r format(n_obs, big.mark = ",")` observations, each corresponding to a single response of one participant to one item. Each translation equivalent received a median of `r round(sum_obs$median)` responses (*Range* = `r round(sum_obs$min)`--`r round(sum_obs$max)`) from participants, both languages pooled together. Data processing and visualisation was done in R [@rcoreteam2013language, version `r r_version`].
 
 #### Modelling approach
 
-We modelled the probability of participants answering each response category (No \< Understands \< Understands and Says) using a Bayesian, multilevel, ordinal regression model. This model allowed us to estimate both item and participant word-acquisition trajectories, while estimating the effect of our variables of interest: Age (number of months elapsed between participants' birth date and questionnaire completion), Length (number of phonemes in the X-SAMPA phonological transcription of the word-form), Exposure (a language exposure-weighted lexical frequency score), and Cognateness (defined as the phonological similarity between translation equivalents). A more detailed descriptions of these predictors is provided in the Model preedictors section. We added these variables as main effects, together with the two-way and three-way interactions between Age, Exposure, and Cognateness. Participant-level and item-level random intercepts and slopes were included where appropriate, according to the structure of the data [@barr2013random]. We specified a weakly informative prior around the parameters of the model. @eq-model shows a detailed description of the model. See Appendix A for a detailed description of the model and its diagnostics.
+We modelled the probability of participants answering each response category (*No* \< *Understands* \< *Understands and Says*) using a Bayesian, multilevel, ordinal regression model. This model allowed us to estimate both item and participant word-acquisition trajectories, while estimating the effect of our variables of interest: *Age* (number of months elapsed between participants' birth date and questionnaire completion), *Length* (number of phonemes in the X-SAMPA phonological transcription of the word-form), *Exposure* (a language exposure-weighted lexical frequency score), and *Cognateness* (defined as the phonological similarity between translation equivalents). A more detailed descriptions of these predictors is provided in the Model predictors section. We added these variables as main effects, together with the two-way and three-way interactions between *Age*, *Exposure*, and *Cognateness*. Participant-level and item-level random intercepts and slopes were included where appropriate, according to the structure of the data [@barr2013random]. We specified a weakly informative prior around the parameters of the model. @eq-model shows a detailed description of the model. See Appendix A for a detailed description of the model and its diagnostics.
+
+We implemented the model using `brms` [@burkner2017brms], an R interface to the Stan probabilistic language (`r stan_version`) [@carpenter2017stan]. We ran `r english::words(dim(model_fit$fit)[2])` iteration chains using the by-default No U-Turn Sampler algorithm with `r format(brms::niterations(model_fit), big.mark = ",")` iterations each and an additional `r format(brms::niterations(model_fit), big.mark = ",")` warm-up iterations per chain.
+
 
 $$
 \begin{aligned}
@@ -443,17 +455,15 @@ $$
 \end{aligned}
 $$ {#eq-model}
 
-We implemented the model using `brms`[@burkner2017brms], an R interface to the Stan probabilistic language (`r stan_version`) [@carpenter2017stan]. We ran `r english::words(dim(model_fit$fit)[2])` iteration chains using the by-default No U-Turn Sampler algorithm with `r format(brms::niterations(model_fit), big.mark = ",")` iterations each and an additional `r format(brms::niterations(model_fit), big.mark = ",")` warm-up iterations per chain.
-
 #### Model predictors {#sec-predictors}
 
-We developed the Exposure predictor to account for the fact that bilinguals' exposure to a given word-form is not only a function of the word-form's lexical frequency, but also of the quantitative input they receive from the language such word-form belongs to. We expressed lexical frequencies as the product between both variables. First, we extracted the child-directed lexical frequency of each word-form from the CHILDES database [@macwhinney2000childes; @sanchez2019childesdb]. Using the corresponding lexical frequencies directly from Catalan and Spanish was not possible due to the low number of Catalan participants and tokens available in their corresponding CHILDES corpora, so they were extracted from the English corpora instead. We mapped the lexical frequencies of the English words to their Catalan and Spanish translations [see @fourtassi2020growth for a similar approach], and transformed them to Zipf scores [@vanheuven2014subtlexuk; @zipf1949human]. We multiplied the resulting lexical frequencies by the reported degree of exposure of the child to Catalan or Spanish. For instance, for a child whose degree of exposure is 80% for Catalan and 20% for Spanish, the expected Exposure score to the Catalan word-form cotxe [car]---with a lexical frequency of `r round(items$freq[items$item=="cotxe"], 2)`---would be `r round(items$freq[items$item=="cotxe"]*0.80, 2)`, while that of its translation to Spanish coche would be `r round(items$freq[items$item=="coche"]*0.20, 2)`.
+We developed the Exposure predictor to account for the fact that bilinguals' exposure to a given word-form is not only a function of the word-form's lexical frequency, but also of the quantitative input they receive from the language such word-form belongs to. We expressed lexical frequencies as the product between both variables. First, we extracted the child-directed lexical frequency of each word-form from the CHILDES database [@macwhinney2000childes; @sanchez2019childesdb]. Using the corresponding lexical frequencies directly from Catalan and Spanish was not possible due to the low number of Catalan participants and tokens available in their corresponding CHILDES corpora, so they were extracted from the English corpora instead. We mapped the lexical frequencies of the English words to their Catalan and Spanish translations [see @fourtassi2020growth for a similar approach], and transformed them to Zipf scores [@vanheuven2014subtlexuk; @zipf1949human]. We multiplied the resulting lexical frequencies by the reported degree of exposure of the child to Catalan or Spanish. For instance, for a child whose degree of exposure is 80% for Catalan and 20% for Spanish, the expected Exposure score to the Catalan word-form *cotxe* [car]---with a lexical frequency of `r round(items$freq[items$item=="cotxe"], 2)`---would be `r round(items$freq[items$item=="cotxe"]*0.80, 2)`, while that of its translation to Spanish *coche* would be `r round(items$freq[items$item=="coche"]*0.20, 2)`.
 
-Following Floccia et al., we defined Cognateness as the phonological similarity between each word-form and its translation. For each translation equivalent, we used the `stringdist`[@vanderloo2014stringdist] R package to calculate the Levenshtein distance between the Catalan and the Spanish phonological transcriptions of the word-forms. The Levenshtein distance measures the number of editions (insertions, deletions, or substitutions) that one string of characters must go through to become identical to the other [@levenshtein1966binary]. We divided the Levenshtein distance of each translation equivalent by the length of the longest word-form to correct for word-form length (longer strings are likely to show a larger number of mismatches). Finally, we subtracted the result from one so that it could be interpreted in terms of phonological similarity, instead of phonological distance. This led to a distance metric that ranged from zero to one, where zero indicates that both word-forms are completely different (e.g., /\textipa{"taw.l5}/--/\textipa{"me.sa}/, table), and one indicates that the two word-forms are identical (e.g., /\textipa{"mar}/--/\textipa{"mar}/, sea) [@floccia2018introduction; @heeringa2003norwegian; @schepens2012distributions; @fourtassi2020growth]. Predictors were standardised before entering the model by subtracting the mean of the predictor from each value and dividing the result by the standard deviation of the predictor.*
+Following Floccia et al., we defined Cognateness as the phonological similarity between each word-form and its translation. For each translation equivalent, we used the `stringdist` [@vanderloo2014stringdist] R package to calculate the Levenshtein distance between the Catalan and the Spanish phonological transcriptions of the word-forms. The Levenshtein distance measures the number of editions (insertions, deletions, or substitutions) that one string of characters must go through to become identical to the other [@levenshtein1966binary]. We divided the Levenshtein distance of each translation equivalent by the length of the longest word-form to correct for word-form length (longer strings are likely to show a larger number of mismatches). Finally, we subtracted the result from one so that it could be interpreted in terms of phonological similarity, instead of phonological distance. This led to a distance metric that ranged from zero to one, where zero indicates that both word-forms are completely different (e.g., /\textipa{"taw.l5}/--/\textipa{"me.sa}/, table), and one indicates that the two word-forms are identical (e.g., /\textipa{"mar}/--/\textipa{"mar}/, sea) [@floccia2018introduction; @heeringa2003norwegian; @schepens2012distributions; @fourtassi2020growth]. Predictors were standardised before entering the model by subtracting the mean of the predictor from each value and dividing the result by the standard deviation of the predictor.
 
 #### Statistical inference
 
-We assessed the practical relevance of the estimated regression coefficients of the model following @kruschke2018bayesian. First, we specified a region of practical equivalence (ROPE) from `r rope_interval["lower"]` to +`r rope_interval["upper"]`, in the probability scale. This region indicates the range of values that we considered equivalent to zero. We then summarised the posterior distribution of each regression coefficient with the 95% highest density interval (HDI). This interval contains the true value of this coefficient with 95% probability, given the data. Finally, we calculated the proportion of posterior samples in the 95% HDI that fell into the ROPE, noted as* $p(\text{ROPE})$*, which indicates the probability that the true value of the regression coefficient falls into the ROPE (and therefore should be considered equivalent to zero). For example, $p(\text{ROPE})=.80$ indicates that, given our data, there is a 80% probability that the true value of the coefficient falls within the ROPE, and can therefore be considered equivalent to zero. See Appendix A for considerations about statistical power and sample size.
+We assessed the practical relevance of the estimated regression coefficients of the model following @kruschke2018bayesian. First, we specified a region of practical equivalence (ROPE) from `r rope_interval["lower"]` to +`r rope_interval["upper"]`, in the probability scale. This region indicates the range of values that we considered equivalent to zero. We then summarised the posterior distribution of each regression coefficient with the 95% highest density interval (HDI). This interval contains the true value of this coefficient with 95% probability, given the data. Finally, we calculated the proportion of posterior samples in the 95% HDI that fell into the ROPE, noted as $p(\text{ROPE})$, which indicates the probability that the true value of the regression coefficient falls into the ROPE (and therefore should be considered equivalent to zero). For example, $p(\text{ROPE})=.80$ indicates that, given our data, there is a 80% probability that the true value of the coefficient falls within the ROPE, and can therefore be considered equivalent to zero. See Appendix A for considerations about statistical power and sample size.
 
 ## Results {#sec-results}
 
@@ -474,11 +484,16 @@ post_draws_list <- model_summary |>
 	split(model_summary$.variable)
 ```
 
-The model posterior showed adequate chain convergence diagnostics and posterior predictive checks (see Appendix A). @tbl-coefs shows the summary of the posterior distribution of the fixed regression coefficients, and their degree of overlap with the ROPE. For interpretability, we report the estimated regression coefficients transformed to the probability scale[^1]. The resulting values correspond to the maximum difference in probability of acquisition (Comprehension or Comprehension and Production) that corresponds to a one standard deviation change in each predictor.
+The model posterior showed adequate chain convergence diagnostics and posterior predictive checks (see Appendix A). @tbl-coefs shows the summary of the posterior distribution of the fixed regression coefficients, and their degree of overlap with the ROPE. For interpretability, we report the estimated regression coefficients transformed to the probability scale[^1]. The resulting values correspond to the maximum difference in probability of acquisition (*Comprehension* or *Comprehension and Production*) that corresponds to a one standard deviation change in each predictor.
 
 [^1]: The logit and probability scales relate non-linearly. This means that one logit difference is not necessarily translated to a unique value in the probability scale. For example, the probability of acquisition of a given word might increase in 5% when age increases from 22 to 23 months, the probability of acquisition of the same word might only increase in 0.2% when age increases from 31 to 32 months. The linear growth of the probability of acquisition differs along the logistic curve, and therefore deciding the age point at which to report the estimates of the regression coefficients in the probability scale is not trivial. Following @gelman2020regression, we report the maximum value of such coefficient, which corresponds to the linear growth (i.e. derivative) of the logistic curve at the age at which most participants were acquiring a given word. This value can be approximated by dividing the coefficient in the logit scale by four: $\hat{\beta_j}/4$, where $\hat{\beta_j}$ is the estimated mean of the posterior distribution of coefficient $j$.
 
 We now present our confirmatory analysis, and report a summary of the regression coefficients of interest. @tbl-coefs shows the summary of the posterior distribution of the fixed regression coefficients, and their degree of overlap with the ROPE. For interpretability, we report the estimated regression coefficients transformed to the probability scale. The resulting values correspond to the maximum difference in probability of acquisition (Comprehension or Comprehension and Production) equivalent to a one standard deviation change in each predictor.
+
+
+\newpage
+
+\blandscape
 
 ```{r tbl-coefs}
 #| label: tbl-coefs
@@ -534,130 +549,161 @@ tbl_data |>
 	add_footnote("$\\beta$: median of the posterior distribution in the probability scale. 95\\% HDI: 95\\% highest density interval of the distribution. $p(\\text{ROPE})$: overlap between the 95\\% HDI and the ROPE, indicating the posterior probability that the true value of the coefficient is equivalent to zero.", notation = "none", escape = FALSE)
 ```
 
-The coefficient of Age showed the strongest association with the probability of acquisition ($\beta$ = `r round(post_draws_list[["b_age_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_age_std"]]$.lower, 3)`, `r round(post_draws_list[["b_age_std"]]$.upper, 3)`]), with all posterior samples falling out of the ROPE. A one-month increment in age increased a maximum of `r round(post_draws_list[["b_age_std"]]$.value/sd(responses$age), 2)` the probability of acquisition. Similarly, the word-form exposure index (Exposure) had a strong effect on the probability of acquisition ($\beta$ = `r round(post_draws_list[["b_exposure_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_exposure_std"]]$.lower, 3)`, `r round(post_draws_list[["b_exposure_std"]]$.upper, 3)`]). All of the posterior samples of this regression coefficient excluded the ROPE. The impact of this predictor on the probability of acquisition was positive: for every standard deviation increase in exposure, the participant was `r round(post_draws_list[["b_exposure_std"]]$.value/sd(responses$exposure), 3)` probability points more likely to acquire it. Word-form length also showed a significant association with probability of acquisition ($\beta$ = `r round(post_draws_list[["b_n_phon_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_n_phon_std"]]$.lower, 3)`, `r round(post_draws_list[["b_n_phon_std"]]$.upper, 3)`]). For every phoneme in the word-form, participants were `r round((post_draws_list[["b_n_phon_std"]]$.value)/sd(responses$n_phon), 3)` probability points less likely to know it. The 95% HDI of the regression coefficient of the Age* $\times$ Exposure interaction also excluded the ROPE ($\beta$ = `r round(post_draws_list[["b_age_std:exposure_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_age_std:exposure_std"]]$.lower, 3)`, `r round(post_draws_list[["b_age_std:exposure_std"]]$.upper, 3)`]), showing that the effect of the word-form exposure index differed across ages: older children were more likely to acquire words with a higher exposure rate than younger children were.
+\elandscape
 
-Around `r scales::percent(post_draws_list[["b_lv_std"]]$.rope, accuracy = 0.01)` of the posterior samples of the main effect of Cognateness overlapped with the ROPE ($\beta$ = `r round(post_draws_list[["b_lv_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_lv_std"]]$.lower, 3)`, `r round(post_draws_list[["b_lv_std"]]$.upper, 3)`]). For every 10% increment in cognateness, the probability of word acquisition increased in `r round(post_draws_list[["b_lv_std"]]$.value/(40*sd(responses$lv)), 3)`. The effect of Cognateness interacted with that of Exposure: the 95% HDI of the regression coefficient of interaction excluded the ROPE entirely ($\beta$ = `r round(post_draws_list[["b_exposure_std:lv_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_exposure_std:lv_std"]]$.lower, 3)`, `r round(post_draws_list[["b_exposure_std:lv_std"]]$.upper, 3)`]), suggesting that the effect of cognateness on a word's probability of acquisition changed depending on participants' exposure to the word-form. When Exposure was low (e.g., -1 SD), Cognateness increased the probability of acquisition substantially, while this effect was negligible for words with median or high exposure (+1 SD) (see @fig-marginal).
+The coefficient of *Age* showed the strongest association with the probability of acquisition ($\beta$ = `r round(post_draws_list[["b_age_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_age_std"]]$.lower, 3)`, `r round(post_draws_list[["b_age_std"]]$.upper, 3)`]), with all posterior samples falling out of the ROPE. A one-month increment in age increased a maximum of `r round(post_draws_list[["b_age_std"]]$.value/sd(responses$age), 2)` the probability of acquisition. Similarly, the word-form exposure index (*Exposure*) had a strong effect on the probability of acquisition ($\beta$ = `r round(post_draws_list[["b_exposure_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_exposure_std"]]$.lower, 3)`, `r round(post_draws_list[["b_exposure_std"]]$.upper, 3)`]). All of the posterior samples of this regression coefficient excluded the ROPE. The impact of this predictor on the probability of acquisition was positive: for every standard deviation increase in exposure, the participant was `r round(post_draws_list[["b_exposure_std"]]$.value/sd(responses$exposure), 3)` probability points more likely to acquire it. Word-form length also showed a significant association with probability of acquisition ($\beta$ = `r round(post_draws_list[["b_n_phon_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_n_phon_std"]]$.lower, 3)`, `r round(post_draws_list[["b_n_phon_std"]]$.upper, 3)`]). For every phoneme in the word-form, participants were `r round((post_draws_list[["b_n_phon_std"]]$.value)/sd(responses$n_phon), 3)` probability points less likely to know it. The 95% HDI of the regression coefficient of the *Age* $\times$ *Exposure* interaction also excluded the ROPE ($\beta$ = `r round(post_draws_list[["b_age_std:exposure_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_age_std:exposure_std"]]$.lower, 3)`, `r round(post_draws_list[["b_age_std:exposure_std"]]$.upper, 3)`]), showing that the effect of the word-form exposure index differed across ages: older children were more likely to acquire words with a higher exposure rate than younger children were.
+
+Around `r scales::percent(post_draws_list[["b_lv_std"]]$.rope, accuracy = 0.01)` of the posterior samples of the main effect of *Cognateness* overlapped with the ROPE ($\beta$ = `r round(post_draws_list[["b_lv_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_lv_std"]]$.lower, 3)`, `r round(post_draws_list[["b_lv_std"]]$.upper, 3)`]). For every 10% increment in cognateness, the probability of word acquisition increased in `r round(post_draws_list[["b_lv_std"]]$.value/(40*sd(responses$lv)), 3)`. The effect of Cognateness interacted with that of *Exposure*: the 95% HDI of the regression coefficient of interaction excluded the ROPE entirely ($\beta$ = `r round(post_draws_list[["b_exposure_std:lv_std"]]$.value, 3)`, 95% HDI = [`r round(post_draws_list[["b_exposure_std:lv_std"]]$.lower, 3)`, `r round(post_draws_list[["b_exposure_std:lv_std"]]$.upper, 3)`]), suggesting that the effect of *Cognateness* on a word's probability of acquisition changed depending on participants' exposure to the word-form. When *Exposure* was low (e.g., -1 *SD*), *Cognateness* increased the probability of acquisition substantially, while this effect was negligible for words with median or high exposure (+1 *SD*) (see @fig-marginal).
+
+\newpage
+
+\blandscape
 
 ```{r fig-marginal}
 #| label: fig-marginal
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-width: 7
-#| fig-height: 4.5
-#| out-width: 100%
+#| fig-width: 7.5
+#| fig-height: 5
 #| eval: true
-#| fig-cap: "Posterior marginal effects. Lines and error bands correspond to the mean and 95% credible interval of the posterior-predicted means. Different shades of grey indicate different levels of cognateness (phonological similarity). Predictions are presented separately for different degrees of word-form exposure index: little exposure to the word-form, mean exposure, and high exposure). Predictions for Comprehension are shown on top and predictions for Comprehension and Production are shown on the bottom. In-sample predictions lie inside the yellow rectangles. For reference, we indicate the 50% chance level of word acquisition (horizontal yellow lines), and the mean age of the sample (vertical yellow lines)."
+#| fig-cap: "Posterior marginal effects for Comprehension (A) and for Production (B)and Production. Lines and error bands correspond to the mean and 95% credible interval of the posterior-predicted means. Different colour shades indicate different levels of cognateness (phonological similarity). Predictions are presented separately for different degrees of the word-form exposure index: little exposure to the word-form, mean exposure, and high exposure. In-sample predictions lie inside the grey rectangles. For reference, we indicate the 50% chance level of word acquisition (horizontal grey lines), and the mean age of the sample (grey lines)."
 fig_data <- model_epreds |>
 	ungroup() |>
-	reframe(
-		.median = mean(.value),
-		.lower = tidybayes::qi(.value, .width = 0.95)[, 1],
-		.upper = tidybayes::qi(.value, .width = 0.95)[, 2],
-		.by = c(ends_with("_std"), .category)
-	) |>
-	mutate(
-		age = (age_std * sd(responses$age)) + mean(responses$age),
-		exposure = factor(exposure_std,
-						  levels = unique(exposure_std),
-						  labels = c(
-						  	"Low exposure (-1 SD)",
-						  	"Mean exposure",
-						  	"High exposure (+1 SD)"
-						  ),
-						  ordered = TRUE
-		),
-		lv = factor(lv_std,
-					levels = unique(lv_std),
-					labels = paste0(c(0, 50, 100), "%"),
-					ordered = TRUE
-		),
-		.category = ifelse(.category == "Understands",
-						   "Comprehension",
-						   "Production"
-		)
-	)
+	reframe(.median = mean(.value),
+			.lower = tidybayes::qi(.value, .width = 0.95)[, 1],
+			.upper = tidybayes::qi(.value, .width = 0.95)[, 2],
+			.by = c(ends_with("_std"), .category)) |>
+	mutate(age = (age_std * sd(responses$age)) + mean(responses$age),
+		   exposure = factor(exposure_std,
+		   				  levels = unique(exposure_std),
+		   				  labels = c("Low exposure (-1 SD)",
+		   				  		   "Mean exposure",
+		   				  		   "High exposure (+1 SD)"),
+		   				  ordered = TRUE),
+		   lv = factor(lv_std,
+		   			levels = unique(lv_std),
+		   			labels = paste0(c(0, 50, 100), "%"),
+		   			ordered = TRUE),
+		   .category = ifelse(.category == "Understands",
+		   				   "Comprehension",
+		   				   "Production"))
+
+clrs_1 <- colorRampPalette(c("#F2F2F2", "#C8102E"))(4)
+clrs_2 <- colorRampPalette(c("#F2F2F2", "#004CA3"))(4) 
+
 fig_data |>
+	filter(.category=="Comprehension") |> 
 	ggplot(aes(age, .median,
 			   ymin = .lower,
 			   ymax = .upper,
 			   colour = lv,
 			   fill = lv,
-			   linetype = lv
-	)) +
-	facet_grid(.category ~ exposure) +
-	annotate(
-		geom = "rect",
-		xmin = min(responses$age),
-		xmax = max(responses$age),
-		ymin = -Inf,
-		ymax = Inf,
-		fill = "grey",
-		alpha = 1 / 4,
-		linetype = "dotted"
-	) +
-	annotate(
-		geom = "text",
-		x = min(responses$age),
-		y = 1,
-		hjust = 0,
-		vjust = 0.9,
-		label = "Observed\nage range",
-		size = 2
-	) +
-	geom_vline(
-		xintercept = mean(responses$age),
-		linewidth = 2 / 4,
-		alpha = 0.5,
-		colour = "grey"
-	) +
-	geom_hline(
-		yintercept = 0.5,
-		linewidth = 2 / 4,
-		alpha = 0.5,
-		colour = "grey"
-	) +
+			   linetype = lv)) +
+	facet_wrap( ~ exposure) +
+	annotate(geom = "rect",
+			 xmin = min(responses$age),
+			 xmax = max(responses$age),
+			 ymin = -Inf,
+			 ymax = Inf,
+			 fill = "grey",
+			 alpha = 1 / 4,
+			 linetype = "dotted") +
+	annotate(geom = "text",
+			 x = min(responses$age),
+			 y = 1,
+			 hjust = 0,
+			 vjust = 0.9,
+			 label = "Observed\nage range",
+			 size = 2) +
+	geom_vline(xintercept = mean(responses$age),
+			   linewidth = 2 / 4,
+			   alpha = 0.5,
+			   colour = "grey") +
+	geom_hline(yintercept = 0.5,
+			   linewidth = 2 / 4,
+			   alpha = 0.5,
+			   colour = "grey") +
 	geom_ribbon(linewidth = 0,
-				alpha = 3/5) +
+				colour = NA,
+				alpha = 1) +
 	geom_line(linewidth = 2/4,
 			  colour = "black") +
+	scale_fill_manual(values = clrs_1[2:4],
+					  guide = guide_legend(override.aes = list(fill = c("#333333",
+					  												  "#505050",
+					  												  "#9D9D9D")))) +
+	theme(axis.title.x = element_blank(),
+		  axis.text.x = element_blank(),
+		  legend.position = "top",
+		  legend.box = "horizontal",
+		  legend.title.align = 1,
+		  legend.justification = "right",
+		  legend.direction = "horizontal",
+		  legend.key.size = unit(1, "cm"),
+		  legend.key.height = unit(1, "cm")) +
 	
-	# ggdist::geom_lineribbon(aes(order = lv),
-	#                         size = 0
-	# ) +
+	fig_data |>
+	filter(.category=="Production") |> 
+	ggplot(aes(age, .median,
+			   ymin = .lower,
+			   ymax = .upper,
+			   colour = lv,
+			   fill = lv,
+			   linetype = lv)) +
+	facet_wrap( ~ exposure) +
+	annotate(geom = "rect",
+			 xmin = min(responses$age),
+			 xmax = max(responses$age),
+			 ymin = -Inf,
+			 ymax = Inf,
+			 fill = "grey",
+			 alpha = 1 / 4,
+			 linetype = "dotted") +
+	annotate(geom = "text",
+			 x = min(responses$age),
+			 y = 1,
+			 hjust = 0,
+			 vjust = 0.9,
+			 label = "Observed\nage range",
+			 size = 2) +
+	geom_vline(xintercept = mean(responses$age),
+			   linewidth = 2 / 4,
+			   alpha = 0.5,
+			   colour = "grey") +
+	geom_hline(yintercept = 0.5,
+			   linewidth = 2 / 4,
+			   alpha = 0.5,
+			   colour = "grey") +
+	geom_ribbon(linewidth = 0,
+				colour = NA,
+				alpha = 1) +
+	geom_line(linewidth = 2/4,
+			  colour = "black") +
+	scale_fill_manual(values = clrs_2[2:4]) +
+	theme(legend.position = "none",
+		  axis.text.x = element_text(size = 9),
+		  strip.text = element_blank()) +
 	
-	labs(
-		x = "Age (months)",
-		y = "Probability of acquisition",
-		colour = "Cognateness (phonological similarity)",
-		fill = "Cognateness (phonological similarity)",
-		linetype = "Cognateness (phonological similarity)"
-	) +
-	scale_linetype_manual(values = rev(c("solid", "dashed", "dotdash"))) +
-	scale_colour_manual(values = clrs[c(1, 4, 5)]) +
-	scale_fill_manual(values = clrs[c(1, 4, 5)]) +
-	scale_y_continuous(
-		breaks = seq(0, 1, 0.25),
-		limits = c(0, 1)
-	) +
-	scale_x_continuous(breaks = seq(0, 50, 5)) +
-	theme(
-		legend.position = "top",
-		legend.box = "vertical",
-		legend.title.align = 1,
-		legend.justification = "right",
-		legend.direction = "horizontal",
-		legend.key.size = unit(1, "cm"),
-		legend.key.height = unit(1, "cm"),
-		axis.text.x = element_text(size = 9),
-		panel.grid = element_blank(),
-		panel.border = element_rect(
-			fill = NA,
-			colour = "black",
-			linewidth = 0.75
-		)
-	)
+	plot_layout(ncol = 1) &
+	plot_annotation(tag_levels = "A") &
+	
+	labs(x = "Age (months)",
+		 y = "p(acquisition)",
+		 colour = "Cognateness (phonological similarity)",
+		 fill = "Cognateness (phonological similarity)",
+		 linetype = "Cognateness (phonological similarity)") &
+	scale_linetype_manual(values = rev(c("solid", "dashed", "dotdash"))) &
+	scale_y_continuous(breaks = seq(0, 1, 0.25),
+					   limits = c(0, 1)) &
+	scale_x_continuous(breaks = seq(0, 50, 5)) &
+	theme(panel.grid = element_blank(),
+		  panel.border = element_rect(fill = NA,
+		  							colour = "black",
+		  							linewidth = 0.75))
 ```
+
+\elandscape
 
 An additional analysis including lexical frequency and language exposure as separate predictors (instead of the composite Exposure measure) showed equivalent results (see Appendix B). To rule out the possibility that cognateness facilitation effect we found was due to cognateness comprising more frequent syllables than non-cognates---and therefore not because of their cognate status itself---, we compared the syllabic frequency of cognates and non-cognates included in our analyses. To calculate syllable frequency, we first extracted all syllables embedded in the selected words. For each syllable, we summed the lexical frequency of all the words in which such syllable appeared. The resulting value provided an estimate of the number of times the syllable appears in child-directed speech, embedded within different words. Finally, for each word-form, we summed the frequency of its syllables, as an estimate of the syllabic frequency of the word-form. We fit a Bayesian model with Cognateness as response variable, and the main effects of syllable frequency and number of syllables (to control for the fact words with more syllables are more likely to score higher in syllabic frequency) as predictors. This model provided strong evidence for the association between cognateness and syllabic frequency being equivalent to zero (see Appendix C).
 

@@ -1,0 +1,105 @@
+```{r bilingual-vocabulary}
+bvq_data <- readRDS(here::here("data-raw", "bvq.rds"))
+p_tmp <- bvq_data$logs |>
+	select(child_id, response_id, lp, age, version, dominance)
+
+vocabulary_age <- bvq_data$vocabulary |>
+	inner_join(p_tmp, by = join_by(child_id, response_id)) |>
+	drop_na() |>
+	filter(
+		!grepl("long", version),
+		between(age, 10, 30),
+		lp != "Other"
+	) |>
+	select(child_id, response_id, type, age, lp, dominance, matches("count|prop"))
+
+n_size <- count(distinct(vocabulary_age, response_id))
+n_size_lp <- count(distinct(vocabulary_age, child_id, lp), lp)
+```
+
+Data collected in our group provide evidence in this line, suggesting that when both languages are taken into account bilinguals may know the same---if not more---more words than monolinguals (see @fig-bilingual-vocabulary). In line with @hoff2012dual's results, we found a graded effect of quantitative language exposure on vocabulary size. As expected, Catalan monolinguals and Catalan-dominant bilinguals show larger Catalan vocabulary sizes across ages in both comprehension and production. Conversely, Spanish monolinguals and Spanish-dominant bilinguals showed larger Spanish vocabulary sizes. Overall, most monolinguals showed non-zero vocabulary sizes in a second language, which is to be expected from the fact that few of them received no-zero exposure to a second language. More interestingly, total vocabulary sizes are higher in both Catalan-dominant and Spanish-dominant bilinguals, compared to Catalan and Spanish monolinguals. This contrasts with @hoff2012dual's results, and suggests that Catalan-Spanish bilinguals actually know more words than their monolingual peers across ages.
+
+
+```{r fig-bilingual-vocabulary}
+#| label: fig-bilingual-vocabulary
+#| fig-cap: "Receptive and productive vocabulary size of monolinguals and bilinguals in Barcelona. We used the Barcelona Vocabulary Questionnaire [@garcia-castro2023bvq], an *ad hoc* extension of the CDI to Catalan and Spanish, to collect vocabulary data from 173 monolinguals (exposed to at least 80% of the time to Catalan or Spanish) and 213 bilinguals (exposed to less than 80% of the time to Catalan or Spanish). Participants provided a total of 437 administrations of the questionnaire. A) Language-specific vocabulary sizes in Catalan and Spainsh B) Total vocabulary size for comprehension and production, resulting from the sum of Catalan and Spanish vocabulary sizes."
+#| fig-width: 9
+#| fig-height: 5
+vocabulary_age_plot <- vocabulary_age |>
+	mutate(cat_count = if_else(dominance=="Catalan", l1_count, l2_count),
+		   spa_count = if_else(dominance=="Catalan", l2_count, l1_count)) |>
+	select(lp, dominance, type, cat_count, spa_count, total_count, age) |>
+	pivot_longer(matches("count"),
+				 names_to = "measure",
+				 values_to = "y") |>
+	mutate(measure = factor(measure,
+							levels = paste0(c("cat", "spa", "total"), "_count"),
+							labels = c("Catalan", "Spanish", "Total")),
+		   type = factor(type,
+		   			  levels = c("understands", "produces"),
+		   			  labels = c("Comprehension", "Production")),
+		   age = floor(age))
+
+vocab_age_means <- vocabulary_age_plot |>
+	summarise(across(y, lst(median, sd)),
+			  n = n(),
+			  .by = c(measure, type, dominance, age)) |>
+	mutate(y_se = y_sd / sqrt(n))
+
+plot_lang <- vocabulary_age_plot |>
+	filter(measure != "Total") |>
+	ggplot(aes(age, y,
+			   colour = dominance,
+			   linetype = lp)) +
+	facet_wrap(type ~ measure,
+			   labeller = \(x) label_value(x, multi_line = FALSE)) +
+	geom_point(alpha = 1 / 7,
+			   size = 1,
+			   shape = 1,
+			   stroke = 1) +
+	geom_smooth(method = "glm",
+				formula = "y ~ x",
+				linewidth = 1,
+				se = FALSE,
+				method.args = list(family = "poisson")) +
+	scale_y_continuous(breaks = seq(0, 800, 100))
+
+
+plot_total <- vocabulary_age_plot |>
+	filter(measure == "Total") |>
+	ggplot(aes(age, y,
+			   colour = dominance,
+			   linetype = lp)) +
+	facet_wrap(type ~ measure,
+			   scales = "free_y",
+			   ncol = 1,
+			   labeller = \(x) label_value(x, multi_line = FALSE)) +
+	geom_point(alpha = 1 / 7,
+			   size = 1,
+			   shape = 1,
+			   stroke = 1) +
+	geom_smooth(method = "glm",
+				formula = "y ~ x",
+				linewidth = 1,
+				se = FALSE,
+				method.args = list(family = "poisson")) +
+	scale_y_continuous(breaks = seq(0, 800, 200)) +
+	theme(axis.title.y = element_blank())
+
+(plot_lang + plot_total) +
+	plot_layout(nrow = 2,
+				design = "AB",
+				guides = "collect",
+				widths = c(0.65, 0.35)) &
+	plot_annotation(tag_levels = "A") &
+	labs(x = "Age (months)",
+		 y = "Vocabulary size",
+		 colour = "Dominant language",
+		 linetype = "Group") &
+	guides(linetype = guide_legend(override.aes = list(colour = "black"))) &
+	scale_color_manual(values = clrs[c(2, 5)]) &
+	scale_x_continuous(breaks = seq(8, 40, 4)) &
+	theme(legend.position = "top",
+		  panel.grid.major.y = element_line(colour = "grey", linetype = "dotted"),
+		  panel.border = element_rect(colour = "grey", fill = NA, linewidth = 1))
+```

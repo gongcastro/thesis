@@ -2,18 +2,46 @@
 title: Discussion
 ---
 
-Aliquam at massa turpis. Donec ac aliquet ligula. Integer eget magna mauris. Vestibulum venenatis ac risus eu ultrices. Suspendisse fringilla vestibulum blandit. Integer hendrerit fermentum ante, molestie consequat risus faucibus nec. Donec pellentesque condimentum bibendum. Cras suscipit ut elit in ullamcorper. Phasellus egestas arcu quis mi posuere, vitae commodo lorem mattis. Nulla a risus nec ligula finibus facilisis. In lorem mauris, pretium at libero et, hendrerit ornare orci. Aliquam sed odio vel lacus ullamcorper vehicula eget nec purus.
+The aim of the present thesis was to investigate the early lexicon in bilingual infants and toddlers. We investigated the role of cross-language lexical similarity on word acquisition, and the potential dynamics of lexical access involved. To address these issues, in Chapter 2 we provided a theoretical account of bilingual word acquisition in which bilinguals accumulate information about cognates faster than non-cognates, leading to an earlier acquisition of the former. This explanation relied on the language non-selective hypothesis of lexical access. We tested the predictions of this account by exploring the effect of cross-language phonological-similarity (i.e., cognateness) on the acquisition trajectories of a large sample of translation equivalents. In Chapter 3, tested one of the assumptions of the theoretical account put forward in Chapter 2: that bilinguals co-activate translation equivalents, even in monolingual situations. We implemented a primed word recognition task to investigate how bilingual toddlers process cognate words, with the goal of providing a link between the role between the dynamics of lexical access and lexical acquisition. In the following sections, we summarise the results from Chapters 2 and 3. We then elaborate on the implications of these results, some theoretical and methodological limitations encountered, and possible steps to take in future research. We conclude with the main contributions of the thesis.
 
-Suspendisse potenti. Sed eget urna ac tortor ornare ullamcorper nec eu urna. Donec quis auctor metus. Curabitur quis pretium turpis. Sed ut lobortis nisi. Aenean eu mattis tortor. In ullamcorper interdum lacus eu euismod. Proin hendrerit lorem ut nibh malesuada, non hendrerit mi viverra. Aliquam quam nunc, fringilla consectetur imperdiet et, consectetur id libero. Etiam vestibulum ex vitae neque placerat, nec eleifend purus euismod. Ut eu magna ipsum. In odio nibh, posuere sit amet convallis sed, dignissim id ligula. Donec eleifend, massa sit amet eleifend volutpat, est erat laoreet ligula, dapibus dapibus nulla diam nec nunc. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean a fringilla dui, eu interdum ex. Mauris auctor consectetur arcu, id tincidunt odio iaculis sit amet.
+## Summary of the findings
 
-::: {.callout-note}
-This is a callout note. Check the Quarto documentation on [callout notes](https://quarto.org/docs/authoring/callouts.html) for more details.
-:::
+### Chapter 2
 
-Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce efficitur lacus et sem ornare, et elementum leo imperdiet. Mauris sit amet vehicula lacus. Donec lacinia pharetra dui et maximus. Ut lobortis sit amet massa consectetur tempus. Duis mauris erat, semper non eros et, pellentesque aliquam turpis. Etiam augue libero, iaculis interdum sollicitudin feugiat, sollicitudin vitae nulla. Aliquam non molestie erat, vel pellentesque eros. Mauris sagittis, urna id vestibulum bibendum, lectus eros faucibus odio, non congue ipsum nulla a ante.
+The aim of Chapter 2 was to explore the acquisition trajectories of cognate and non-cognate translation equivalents. We presented a model of word acquisition in which language non-selectivity in the bilingual lexicon leads to a faster accumulation of information for cognates via cross-language activation of translation equivalents during language exposure. This model predicted cognates to benefit more strongly from this accumulation of information across languages if they belonged to the language of lower exposure of the infant. To test these hypotheses, we designed and implemented an *ad hoc* questionnaire---the Barcelona Vocabulary Questionnaire (BVQ) [@garcia2023bvq]---, filled by a large sample of families of monolinguals and bilinguals aged 10 to 32 months, learning Catalan and Spanish. Collected data included comprehension and production estimates for individual words in Catalan and Spanish. We used Item Response Theory (IRT) to model participants' probability of word acquisition (in either production and comprehension) across ages, including two predictors of interest: cognateness, frequency of exposure (an estimate of lexical frequency, adjusted by participants' relative exposed to each language). If cognateness facilitates lexical acquisition, we expected an overall earlier age of acquisition for cognate words, compared to non-cognate words. We found an interaction between cognateness and frequency of exposure. Across ages, cognate words were more likely to acquired than non-cognate words. This effect was observed in words with low exposure frequency, but not in words with high exposure frequency. In line with our hypotheses, this suggested that participants benefited from the cognate status of the words only when they were exposed to such word with relatively low frequency.
 
-Vestibulum vulputate, sapien ut convallis consequat, lorem est ullamcorper neque, a malesuada arcu sem ac ipsum. Duis ac semper ipsum. Aliquam eget lorem dignissim, pretium orci non, sollicitudin arcu. Quisque urna ipsum, tincidunt ac risus eu, suscipit sollicitudin tellus. Donec eget tortor et neque venenatis vestibulum. In vestibulum massa vitae arcu maximus consectetur. Phasellus tellus tellus, congue sit amet nisl vitae, tempus hendrerit nisi. Maecenas ullamcorper quis elit vitae auctor. Curabitur egestas eleifend justo, et fringilla mauris commodo ut. Vestibulum maximus neque dolor, at dictum nunc cursus et. Maecenas ac cursus nulla. Nunc ut massa ex. Suspendisse potenti. Vivamus est nisi, varius ut arcu eget, iaculis convallis ex. Etiam condimentum magna mi, et rhoncus nulla efficitur ac. Proin ultricies mattis neque, sed varius erat.
+### Chapter 3
 
-Donec porttitor facilisis sapien id scelerisque. Aliquam gravida tristique lobortis. Cras lacinia mattis sapien, a accumsan risus interdum vitae. Nam diam mauris, sollicitudin eu commodo ut, convallis sit amet est. Nam volutpat nibh vel orci euismod tempus. Donec in sem magna. Pellentesque eleifend commodo enim, ut suscipit odio tempus ut. Nullam tempor turpis sapien, in suscipit quam finibus quis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed semper orci dolor, finibus ornare odio viverra vel. In tellus ante, vulputate nec purus ac, feugiat viverra mi.
+The model of lexical acquisition presented in Chapter 2 built on the assumption that bilingual infants activate translation equivalents in parallel during language exposure---even in monolingual situations---in line with the language-non selective hypothesis of lexical access. Evidence indicating that bilingual infants co-activate translation equivalents in both languages during monolingual situations is scarce. The aim of Chapter 3 was to test bilingual infants in a primed word recognition task, in which stimuli were only presented in their dominant language. This task was an adaptation of the implicit naming paradigm, in which primes are presented in the form of pictures shown in silence to participants. Previous studies had shown that monolingual infants lexicalise such prime pictures, which influences the subsequent recognition of a phonologically related word. In our implementation of the task, we manipulated the degree of phonological overlap between prime and target labels, and the cognate status of the prime labels. We predicted that, if bilinguals activate prime words in both languages---in line with the language non-selective account of lexical access---priming effects would be stronger when the prime labels are cognates, both overlapping phonologically with the subsequently recognised word. Our adaptation of this task failed to produce the anticipated effects, and even to reproduced the results from the original studies in monolinguals. We interpreted this as the result of methodological complications driven by the adjustments we conducted on the original procedure.
+
+## General discussion
+
+Main contribution
+
+Previous research had shown that @floccia2018introduction
+
+This meant that
+
+This was not tested yet
+
+In Chapter 1, we
+
+Parallel activation in monolingual situations, no evidence
+
+In Chapter 2, we
+
+This hypothesis remains untested
+
+Contributions
+
+## Limitations and future research
+
+### Experimental caviats
+
+### Future directions
+
+## Conclusions
+
+## References
 
 \clearpage

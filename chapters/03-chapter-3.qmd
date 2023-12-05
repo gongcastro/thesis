@@ -1,5 +1,5 @@
 ---
-title: "Developmental trajectories of bilingual word recognition"
+title: "Chapter 3: Developmental trajectories of langugage non-selectivity in the bilingual lexicon"
 ---
 
 ```{r setup}
@@ -154,8 +154,11 @@ suppressWarnings({
 
 ```
 
-We collected data from `r n_participants_total` children (`r n_participants_sex$n[1]` female, `r n_participants_sex$n[2]` male, with `r english::words(n_participants_sex$n[3])` additional participants' sex not being reported; Age: *Mean* = `r round(ages$age_mean, 2)` months, *SD* = `r round(ages$age_sd, 2)`, *Range* = [`r round(ages$age_min, 2)`-`r round(ages$age_max, 2)`]) (see @tbl-participants for a detailed summary of participants' age and language profile), living in the Oxfordshire area (United Kingdom). Participants were tested at the Oxford BabyLab at the University of Oxford. Families were recruited from maternity rooms in private hospitals and social media, and contacted via phone when the child's age spanned between 20 and 32 months. From the `r n_participants_total` children that participated, `r n_participants_sessions$session_1` participated once, and `r n_participants_sessions$session_2` participated twice. Recurrent participants were tested with at least `r round(time_diffs, 2)$diff_min` months of difference. We gathered a total of `r n_sessions_total$n` testing sessions. All participants were being raised in exclusively British English monolingual homes. Participants' vision was normal, none used glasses or any other type of vision corrector.
+We collected data from `r n_participants_total` children (`r n_participants_sex$n[1]` female, `r n_participants_sex$n[2]` male, with `r english::words(n_participants_sex$n[3])` additional participants' sex not being reported; Age: *Mean* = `r round(ages$age_mean, 2)` months, *SD* = `r round(ages$age_sd, 2)`, *Range* = `r round(ages$age_min, 2)`--`r round(ages$age_max, 2)`) (see @tbl-participants for a detailed summary of participants' age and language profile), living in the Oxfordshire area (United Kingdom). Participants were tested at the Oxford BabyLab at the University of Oxford. Families were recruited from maternity rooms in private hospitals and social media, and contacted via phone when the child's age spanned between 20 and 32 months. From the `r n_participants_total` children that participated, `r n_participants_sessions$session_1` participated once, and `r n_participants_sessions$session_2` participated twice. Recurrent participants were tested with at least `r round(time_diffs, 2)$diff_min` months of difference. We gathered a total of `r n_sessions_total$n` testing sessions. All participants were being raised in exclusively British English monolingual homes. Participants' vision was normal, none used glasses or any other type of vision corrector.
 
+\newpage
+
+\blandscape
 
 ```{r tbl-participants}
 #| label: tbl-participants
@@ -230,6 +233,8 @@ gt(tbl_data,
 	tab_style(cell_text(style = "italic"),
 			  cells_column_spanners())
 ```
+
+\elandscape
 
 ```{r vocab-values-oxf}
 vocabulary_oxf <- inner_join(vocabulary,
@@ -354,6 +359,10 @@ durations <- stimuli |>
 
 We created four lists of trials, across which the same target-distractor pair appeared with a different prime, counterbalancing the condition to which it belonged. For instance, in list one the *ball*-*trousers* pair was preceded by *bike* (*Related/Cognate*), by *butterfly* (*Related/Non-cognate*) in list two, and by *star* and *nose* (*Unrelated*) in lists three and four (see Appendix A for a detailed description of the stimuli). @tbl-stimuli shows a detailed summary of the stimuli properties, broken down by trial type and testing language. Trials included in each condition had equivalent length (number of phonemes) and lexical frequency. Lexical frequencies were extracted from the English corpora from the CHILDES database [@macwhinney2000childes; @sanchez2019childes] as counts per million words, and transformed into Zipf scores for easier cross-language comparison [@zipf1945meaning; @van2014subtlex]. Audios had an average duration of `r durations$english$duration_mean` ms (*SD* = `r durations$english$duration_sd`, *Range* = `r durations$english$duration_min`--`r durations$english$duration_max`).
 
+\newpage
+
+\blandscape
+
 ```{r tbl-stimuli}
 #| label: tbl-stimuli
 #| tbl-cap: "Summary of stimuli properties by trial type. Values are summarised using the mean and the standard deviation (between parentheses)."
@@ -419,6 +428,8 @@ tab_spanner("# Phonemes", matches("nphon")) |>
 # 		  	 cells_column_spanners(),
 # 		  	 cells_grand_summary()))
 ```
+
+\elandscape
 
 The auditory stimuli were natural exemplars of the selected target words, spoken by a Southern British English female speaker who was instructed to pronounce each word in a toddler-directed manner. We used the Audacity and Praat [@boersma2001speak] software packages to trim, denoised, and normalised their amplitude. The visual stimuli were realistic photographic representations of a typical exemplars of the prime, target, and distractor words. Image backgrounds were removed from the original pictures using the GNU Image Manipulation Program (GIMP), resized to a rectangle of a maximum of 400 pixels height or wide, and finally placed in the centre of a 50% grey rectangle square of 500 $\times$ 500 pixels. The final stimuli had a resolution of 72 dpi. When presented in the eye-tracker screen, the areas of interest (AOI) occupied an area of 13.23 $\times$ 13.23 cm (11.613$^{\circ}$ visual angle from participants' perspective).
 
@@ -487,6 +498,10 @@ We gathered data from `r format(n_trials, big.mark = ",")` trials from `r n_sess
 
 After trials that matched any of the aforementioned exclusion criteria from the data set, we excluded participants who did not provide at least two valid trials in each condition (*n* = `r n_exc_participants`), and participants with a vocabulary size lower than 42, which corresponds to 10% of the words in the OCDI vocabulary checklist (*n* = `r n_exc_participants_vocab`). The final data set included `r format(n_trials_valid, big.mark = ",")` trials from `r n_sessions_valid` testing sessions, generated by `r format(n_participants_valid, big.mark = ",")` distinct participants. Of those participants, `r n_longitudinal[1, 2]` provided data from one experimental session, `r n_longitudinal[2, 2]` provided data from two experimental sessions, and `r n_longitudinal[3, 2]` provided data from three experimental sessions. From the trials included in the final data set, `r n_trials_condition$unrelated_2$n` were *Unrelated* trials (`r n_trials_condition$unrelated$n` previously excluded), and `r n_trials_condition$non_cognate_2$n + n_trials_condition$cognate_2$n` were *Related*  trials(`r n_trials_condition$non_cognate$n + n_trials_condition$cognate$n` previously excluded).
 
+\newpage
+
+\blandscape
+
 ```{r tbl-attrition}
 #| label: tbl-attrition
 #| tbl-cap: "Participant-level and trial-level sample size after applying inclusion criteria. The number of excluded participants and trials is indicated between parentheses."
@@ -544,6 +559,8 @@ attrition |>
 # 	fmt = ~ fmt_integer(.))
 ```
 
+\elandscape
+
 ```{r data-analysis}
 
 r_info <- sessionInfo()
@@ -560,6 +577,8 @@ rope_interval <- c(-0.1, +0.1)
 **Modelling approach**. We used Bayesian Hierarchical General Additive Models (HGAMs) to model the data [@pedersen2019hierarchical], using a Gaussian distribution to model the the logit of target looking. First, we fit a model ($\mathcal{M}_0$) that included the main effects of *Condition* and *Age* as fixed effects in the model. We set an *a priori* contrast for the *Condition* predictor [@schad2020capitalize], comparing *Unrelated* and *Related* trials (sum-coded as `-0.5` and `+0.5`. Before entering the model, the *Age* predictor was standardised by subtracting from each observation the mean of the predictor, and dividing the result from the standard deviation of the predictor. We included the variable *Session*---which indexes individual testing sessions that may belong to the same participant---as grouping variable, nested within the *Participant* grouping variable---which indexes a distinct participant. This nested random effects structure incorporates the longitudinal design of data collection, in which multiple participants were tested more than once at different ages. We added by-session intercepts and *Condition* slopes, and by-participant intercepts and *Age* slopes. To model the time course of target looking across time bins, we included B-splines for the main effect of *Time*, and for the *Condition* predictor [@wood2017generalized]. For both splines, we specified $k = 8$ basis functions or *knots*. @eq-model shows a formal implementation of the model.
 
 We implemented this model using `brms` [@burkner2017brms], an R interface to the Stan probabilistic language (`r stan_version`) [@carpenter2017stan]. We ran `r english::words(dim(model_fits_bcn$fit_0$fit)[2])` iteration chains using the by-default No U-Turn Sampler algorithm with `r format(brms::niterations(model_fits_bcn$fit_0), big.mark = ",")` iterations each and an additional `r format(brms::niterations(model_fits_bcn$fit_0), big.mark = ",")` warm-up iterations per chain.
+
+\newpage
 
 $$
 \begin{aligned}
@@ -773,9 +792,13 @@ plot_epreds + plot_diffs +
 
 To test our hypotheses regarding the role of age and vocabulary size on the emergence of priming effects, we compared the fit of model $\mathcal{M}_0$ against the fit of other models including the two-way interaction between *Condition* and *Age* ($\mathcal{M}_1$), or the two-way interaction between *Condition* and *Vocabulary* ($\mathcal{M}_2$), and all main effects involved. As with *Age*, the *Vocabulary* predictor was standardised before entering the model. We compared the models using one-out cross-validation (LOO-CV) as a benchmark of model performance, using a Pareto-smoothed importance sampling (PSIS) approximation [@vehtari2017practical]. A better performance by models $\mathcal{M}_1$ or $\mathcal{M}_2$ over $\mathcal{M}_0$ would point to *Age* or *Vocabulary*, respectively, playing a substantial role in participants' word-recognition, or on the emergence of priming effects. @tbl-loos-oxf shows a summary of the predictive performance of the models, as quantified by the expected log-predictive density (*ELPD*), and its standard error (*SE*, a measure of uncertainty around the *ELPD*). Overall, all models, performed equivalently, as shown by the small difference in *ELPD*, relative to the uncertainty of the estimates. This suggests that participants' target looking during the test phase can be predicted with relative accuracy without taking into account the age or vocabulary size of the participants.
 
+\newpage
+
+\blandscape
+
 ```{r tbl-loos-oxf}
 #| label: tbl-loos-oxf
-#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1."
+#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. *ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff)*: standard error of component-wise differences of *ELPD* between two models."
 brms::loo_compare(model_loos_oxf) |>
 	as.data.frame() |>
 	tibble::rownames_to_column("model") |>
@@ -795,18 +818,20 @@ brms::loo_compare(model_loos_oxf) |>
 	relocate(matches("diff"), .after = matches("loo")) |>
 	gt(rowname_col = "model") |>
 	fmt_number(is.numeric) |>
-	cols_label(elpd_diff = "ELPD (diff.)",
+	cols_label(elpd_diff = "ELPD (diff)",
 			   se_diff = "SE ELPD (diff)",
 			   elpd_loo = "ELPD",
 			   se_elpd_loo = "SE ELPD") |>
 	fmt_missing(missing_text = "---") |>
-	tab_footnote(footnote = md("*ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff.)*: standard error of component-wise differences of *ELPD* between two models.")) 
+	tab_footnote(footnote = md("*ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff)*: standard error of component-wise differences of *ELPD* between two models.")) 
 # tab_style(cell_text(style = "italic"), cells_column_labels())
 ```
 
+\elandscape
+
 ### Discussion
 
-We found strong evidence of successful word recognition across participants of all ages, but we did not observe any evidence of phonological priming. English monolingual participants from all ages showed an equivalent pattern of target looking in both Related (Related/Cognate and Related/Non-cognate) and Unrelated trials. In conclusion, we failed to replicate the original studies by @mani2010infant and @mani2011phonological. The absence of a phonological priming effect suggest that either English monolinguals did not generate implicit labels for the prime pictures presented in silence, or that, if generated, such labels did not interact with the subsequent recognition of the target word. Both explanations conflict with both Mani and Plunkett’s studies, and also with previous studies suggesting that infants 12-months and older already generate internal labels when presented with pictures of familiar objects [@duta2012erp; @styles2015infant].
+We found strong evidence of successful word recognition across participants of all ages, but we did not observe any evidence of phonological priming. English monolingual participants from all ages showed an equivalent pattern of target looking in both *Related* and *Unrelated* trials. In conclusion, we failed to replicate the original studies by @mani2010infant and @mani2011phonological. The absence of a phonological priming effect suggest that either English monolinguals did not generate implicit labels for the prime pictures presented in silence, or that, if generated, such labels did not interact with the subsequent recognition of the target word. Both explanations conflict with both Mani and Plunkett's studies, and also with previous studies suggesting that infants 12-months and older already generate internal labels when presented with pictures of familiar objects [@duta2012erp; @styles2015infant].
 
 Adding the predictors *Age* or *Vocabulary size* as predictors in the model, in interaction with *Condition* did not increase the fit of the model. This points to neither variable having a substantial influence in participants' target looking behaviour across conditions. These results diverge from previous studies reporting an increment in word recognition speed [@fernald1998rapid; @marchman2008speed], and stronger phonological priming effects in children with larger vocabulary sizes [@mani2011phonological; @chow2017spoken; @avila2021longitudinal]. Overall, this results suggest that our modification of the implicit naming task resulted in the loss of the originally reported effect.
 
@@ -1259,9 +1284,13 @@ plot_epreds + plot_diffs +
 
 A comparison between models including *Age* ($\mathcal{M}_{1}$), *L1 vocabulary* ($\mathcal{M}_{2}$), and *Total vocabulary* ($\mathcal{M}_{3}$) against model $\mathcal{M}_{0}$, which only included *Age* as a main effect is shown in @tbl-loos. Overall, all models performed equivalently, with the model $\mathcal{M}_{2}$ showing slightly better performance. The equivalent performance of all models suggests that participants' target looking during the test phase can be predicted with relative accuracy without taking into account *L1 vocabulary*, or *Total vocabulary* sizes. We now report the median and 95% HDI of the coefficients of $\mathcal{M}_{2}$, the best-fitting model.
 
+\newpage
+
+\blandscape
+
 ```{r tbl-loos}
 #| label: tbl-loos
-#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1."
+#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 2. *ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff)*: standard error of component-wise differences of *ELPD* between two models."
 get_loos <- function(x, y) {
 	out <- lst(m_0 = x, m_1 = y) |>
 		brms::loo_compare() |>
@@ -1300,15 +1329,16 @@ brms::loo_compare(model_loos_bcn) |>
 	gt(rowname_col = "model") |>
 	fmt_number(is.numeric) |>
 	cols_label(
-		elpd_diff = "ELPD (diff.)",
+		elpd_diff = "ELPD (diff)",
 		se_diff = "SE ELPD (diff)",
 		elpd_loo = "ELPD",
 		se_elpd_loo = "SE ELPD"
 	) |>
 	fmt_missing(missing_text = "---") |>
-	tab_footnote(footnote = md("*ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff.)*: standard error of component-wise differences of *ELPD* between two models.")) |>
 	tab_style(cell_text(style = "italic"), cells_column_labels())
 ```
+
+\elandscape
 
 ### Discussion
 
