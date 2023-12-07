@@ -17,7 +17,7 @@ book:
 thesis:
   title: "Bilingual Insights into the Initial Lexicon"
   subtitle: "The Role of Cognates in Word Acquisition"
-  author: "Gonzalo Garcia-Castro"
+  author: "Gonzalo García de Castro García"
   date: 2023
   department: "Department of Experimental and Health Sciences"
   supervisor: "Dr. Núria Sebastián-Gallés"
@@ -35,8 +35,8 @@ format:
   upfthesis-pdf:
     page-crop: frame # cam, crop, frame
     page-info: noinfo # info, noinfo
-    lot: true # show list of tables? (not required)
-    lof: true # show list of figures? (not required)
+    lot: false # show list of tables? (not required)
+    lof: false # show list of figures? (not required)
     linestretch: 1.5 # can be 1 or 1.5
     include-in-header:
       text: |
@@ -61,5 +61,5 @@ bibliography:
   - "_assets/refs-introduction.bib"
   - "_assets/refs-chapter-2.bib"
   - "_assets/refs-chapter-3.bib"
-
+  - "_assets/refs-discussion.bib"
   
