@@ -1,0 +1,91 @@
+```{r setup}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+# load objects -----------------------------------------------------------------
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(ggdist)
+library(patchwork)
+library(here)
+library(readr)
+library(dplyr)
+
+options(readr.show_progress = FALSE,
+		readr.show_col_types = FALSE)
+
+model_summary <- read_csv(here("data", "02-chapter-2",
+							   "results", "posterior", "model_summary.csv"))
+
+posterior_doe_summary <- read_csv(here("data", "02-chapter-2",
+									   "results", "posterior", "posterior_summary_doe.csv"))
+
+posterior_doe_draws <- read_csv(here("data", "02-chapter-2",
+									 "results", "posterior", "posterior_draws_doe.csv"))
+
+
+my_theme <- theme_minimal() +
+	theme(panel.grid = element_line(colour = "grey",
+									linetype = "dotted"),
+		  axis.line = element_line(colour = "black"),
+		  text = element_text(size = 12, colour = "black"),
+		  axis.text = element_text(colour = "black"))
+
+theme_set(my_theme)
+
+```
+
+As a robustness check, we fit a model similar to the one described in the main manuscript, but including lexical frequency and language degree of exposure as separate predictors, instead of the composite measure *Exposure*. Language degree of exposure (*DoE*) was included in interaction with *Age* and *Cognateness*, while lexical frequency (*Frequency*) was included as a main effect. @tbl-coefs-doe shows a comparison between the posterior distribution of the regression coefficients of both models. Overall, results are equivalent. 
+\newpage
+
+\blandscape
+
+```{r tbl-coefs-doe}
+#| label: tbl-coefs-doe
+#| tbl-cap: "Posterior distribution of regression coefficients of the model including the *Exposure* composite predictor, and of the model including lexical frequency (*Frequency*) and degree of exposure (*DoE*) separately. $\\beta$: median of the posterior distribution in the probability scale. 95\\% HDI: 95\\% highest density interval of the distribution. $p(\\text{ROPE})$: overlap between the 95\\% HDI and the ROPE, indicating the posterior probability that the true value of the coefficient is equivalent to zero."
+#| echo: false
+#| message: false
+#| warning: false
+# summarise posterior draws
+tbl_data <- list("Exposure model" = model_summary,
+				 "DoE-Frequency model" = posterior_doe_summary) |> 
+	purrr::map_df(\(x) mutate(x, across(.variable_name, as.character)),
+				  .id = ".model") |> 
+	mutate(across(c(.value, .lower, .upper),
+				  function(x) {
+				  	ifelse(.type=="Intercepts (at 22 months)",
+				  		   plogis(x),
+				  		   x/4)
+				  })) |>
+	filter(.type=="Slopes") |> 
+	select(.model, .variable_name, .value, .lower, .upper, .rope) |> 
+	mutate(across(.value:.upper, plogis),
+		   .variable_name = gsub("×", '$\\\\times$', .variable_name),
+		   .hdi = paste0("[", round(.lower, 3),
+		   			  ", ", round(.upper, 3), "]"),
+		   .rope = sub("^(-?)0.", "\\1.",
+		   			sprintf("%.3f", .rope))) |> 
+	select(.variable_name, .value, .lower, .upper, .hdi, .rope) 
+
+col_names <- c("", "$\\beta$", "95\\% HDI", "$p(\\text{ROPE})$")
+
+tbl_data |> 
+	select(-c(.lower, .upper)) |> 
+	knitr::kable(format = "latex",
+				 escape = FALSE,
+				 col.names = col_names,
+				 digits = 3,
+				 booktabs = TRUE,
+				 align = "lclr",
+				 linesep = "") |> 
+	kableExtra::pack_rows("Model: Exposure",
+						  start_row = 1,
+						  end_row = 8) |> 
+	kableExtra::pack_rows("Model: Frequency & DoE",
+						  start_row = 9,
+						  end_row = 17) 
+```
+
+\elandscape
