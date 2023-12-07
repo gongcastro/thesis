@@ -179,16 +179,15 @@ sum_rows <- function(x) {
 	} else if (is.list(x)) {
 		""
 	} else {
-		"N"
+		"\\textit{N}"
 	}
 }
 
 sums_row <- tbl_data |>
 	summarise(
-		semantic_category = "N",
+		semantic_category = "\\textit{N}",
 		across(a:d, sum),
-		items = "-"
-	)
+		items = "-")
 
 tbl_data <- rbind(tbl_data, sums_row)
 
@@ -198,11 +197,9 @@ kable(tbl_data,
 	  booktabs = TRUE,
 	  escape = FALSE,
 	  col.names = col_names,
-	  align = "lccccl"
-) |>
+	  align = "lccccl") |>
 	row_spec(nrow(tbl_data) - 1,
-			 hline_after = TRUE
-	)
+			 hline_after = TRUE)
 ```
 
 \elandscape
@@ -230,24 +227,17 @@ suppressWarnings({
 	diff_responses <- responses |>
 		distinct(id, age) |>
 		left_join(distinct(participants, id, time_stamp, age),
-				  by = c("id", "age")
-		) |>
+				  by = c("id", "age")) |>
 		group_by() |>
 		arrange(id, time_stamp) |>
-		mutate(
-			diff_lag = time_stamp - dplyr::lag(time_stamp, default = NA),
-			.by = id
-		) |>
-		summarise(
-			diff_min = min(diff_lag, na.rm = TRUE),
-			diff_max = max(diff_lag, na.rm = TRUE),
-			.by = id
-		) |>
+		mutate(diff_lag = time_stamp - dplyr::lag(time_stamp, default = NA),
+			   .by = id) |>
+		summarise(diff_min = min(diff_lag, na.rm = TRUE),
+				  diff_max = max(diff_lag, na.rm = TRUE),
+				  .by = id) |>
 		dplyr::filter(!(diff_min %in% c(-Inf, Inf))) |>
-		summarise(
-			diff_min = min(diff_min, na.rm = TRUE),
-			diff_max = max(diff_max, na.rm = TRUE)
-		)
+		summarise(diff_min = min(diff_min, na.rm = TRUE),
+				  diff_max = max(diff_max, na.rm = TRUE))
 })
 
 n_responses <- nrow(distinct(responses, id, age))
@@ -256,10 +246,8 @@ dates <- as.Date(range(participants$time_stamp, na.rm = TRUE))
 
 n_trilingual <- participants |>
 	select(starts_with("doe_")) |>
-	mutate(
-		doe_total = rowSums(across(everything())),
-		is_trilingual = doe_total < 1
-	) |>
+	mutate(doe_total = rowSums(across(everything())),
+		   is_trilingual = doe_total < 1) |>
 	add_count(name = "n_total") |>
 	count(is_trilingual, n_total) |>
 	mutate(prop = n / n_total)
@@ -289,54 +277,37 @@ We used the highest self-reported educational attainment of parents or caregiver
 #| message: false
 #| warning: false
 #| tbl-cap: "Participant sample size by age and degree of exposure to Catalan. For participants exposed to Catalan and Spanish exclusively, the proportion of Catalan exposure shown in the table is complementary to the degree of exposue to Spanish. For participants exposed to a third languages this proportion is not complementary unless one adds the degree of exposed to the third language, which never exceeded 10\\%. Participants with 100\\%, 0\\%, and 50\\% Catalan exposure would be traditionaly classified as Catalan monolingual, Spanish monolingual, and Catalan-Spanish bilingual, respectively."
-ftn <- ""
-
-col_names <- c(
-	"Catalan exposure",
+col_names <- c("Catalan exposure",
 	"[10-14]",
 	"(14, 18]",
 	"(18, 22]",
 	"(22-26]",
 	"(26-30]",
-	"(30-34]"
-)
+	"(30-34]")
 
 tbl_data <- participants |>
-	mutate(across(
-		starts_with("doe_"),
-		\(x) floor(x * 10) / 10
-	)) |>
-	mutate(
-		age = cut(floor(age),
+	mutate(across(starts_with("doe_"),
+		\(x) floor(x * 10) / 10)) |>
+	mutate(age = cut(floor(age),
 				  c(10, 14, 18, 22, 26, 30, 34, 36),
-				  include.lowest = TRUE
-		),
-		doe_catalan = as.character(
-			cut(doe_catalan,
+				  include.lowest = TRUE),
+		doe_catalan = as.character(cut(doe_catalan,
 				c(0, 0.25, 0.5, 0.75, 1),
-				labels = c(
-					"0-25%",
+				labels = c("0-25%",
 					"25-50%",
 					"50-75%",
-					"75-100%"
-				),
-				include.lowest = TRUE
-			)
-		)
-	) |>
+					"75-100%"),
+			include.lowest = TRUE))) |>
 	count(age, doe_catalan) |>
 	arrange(desc(doe_catalan)) |>
-	pivot_wider(
-		names_from = age,
+	pivot_wider(names_from = age,
 		values_from = n,
-		names_repair = janitor::make_clean_names
-	) |>
+		names_repair = janitor::make_clean_names) |>
 	mutate(across(where(is.numeric), \(x) ifelse(is.na(x), 0, x)))
 
-sum_rows <- function(x) if (is.numeric(x)) sum(x) else "N"
+sum_rows <- function(x) if (is.numeric(x)) sum(x) else "\\textit{N}"
 sums_row <- as.data.frame(lapply(tbl_data, sum_rows),
-						  col.names = colnames(tbl_data)
-)
+						  col.names = colnames(tbl_data))
 
 tbl_data <- rbind(tbl_data, sums_row)
 
@@ -345,12 +316,9 @@ kable(tbl_data,
 	  digits = 1,
 	  booktabs = TRUE,
 	  col.names = col_names,
-	  align = "lcccccc"
-) |>
-	add_header_above(c(
-		" " = 1,
-		"Age (months)" = ncol(tbl_data) - 1
-	)) |>
+	  align = "lcccccc") |>
+	add_header_above(c(" " = 1,
+		"Age (months)" = ncol(tbl_data) - 1)) |>
 	row_spec(nrow(tbl_data) - 1,
 			 hline_after = TRUE)
 ```
@@ -475,12 +443,9 @@ rhats_df <- model_convergence |>
 	drop_na()
 
 post_draws_list <- model_summary |>
-	mutate(across(
-		.value:.upper,
-		\(x) ifelse(grepl("Intercept", .type),
-					plogis(x), x / 4
-		)
-	)) |>
+	mutate(across(.value:.upper,
+				  \(x) ifelse(grepl("Intercept", .type),
+				  			plogis(x), x / 4))) |>
 	split(model_summary$.variable)
 ```
 
@@ -497,56 +462,44 @@ We now present our confirmatory analysis, and report a summary of the regression
 
 ```{r tbl-coefs}
 #| label: tbl-coefs
-#| tbl-cap: "Posterior distribution of regression coefficients. Median: median of the posterior distribution in the probability scale. 95\\% HDI: 95\\% highest density interval of the distribution. *p*(ROPE): overlap between the 95\\% HDI and the ROPE, indicating the posterior probability that the true value of the coefficient is equivalent to zero."
+#| tbl-cap: "Summary of the posterior distribution of fixed regression coefficients. $\\beta$: median of the posterior distribution in the probability scale. 95\\% HDI: 95\\% highest density interval of the distribution. $p(\\text{ROPE})$: overlap between the 95\\% HDI and the ROPE, indicating the posterior probability that the true value of the coefficient is equivalent to zero."
 #| echo: false
 #| message: false
 #| warning: false
-#| out-width: 80%
 # summarise posterior draws
 intercept_label <- "Intercepts (at 22 months)"
 
 tbl_data <- model_summary |>
 	select(.variable_name, .value, .lower, .upper, .rope, .type) |>
-	mutate(
-		across(
-			.value:.upper,
-			\(x) ifelse(.type == intercept_label, plogis(x), x / 4)
-		),
+	mutate(across(
+		.value:.upper,
+		\(x) ifelse(.type == intercept_label, plogis(x), x / 4)),
 		.variable_name = gsub("×", "$\\\\times$", .variable_name),
-		.hdi = paste0(
-			"[", round(.lower, 3),
-			", ", round(.upper, 3), "]"
-		),
+		.hdi = paste0("[", round(.lower, 3),
+					  ", ", round(.upper, 3), "]"),
 		.rope = ifelse(is.na(.rope),
 					   "-",
-					   sub("^(-?)0.", "\\1.", sprintf("%.3f", .rope))
-		)
-	) |>
+					   sub("^(-?)0.", "\\1.", sprintf("%.3f", .rope)))) |>
 	select(.variable_name, .value, .lower, .upper, .hdi, .rope)
 
 col_names <- c("", "$\\beta$", "95\\% HDI", "$p(\\text{ROPE})$")
 
 tbl_data |>
 	select(-c(.lower, .upper)) |>
-	kable(
-		format = "latex",
-		escape = FALSE,
-		col.names = col_names,
-		digits = 3,
-		booktabs = TRUE,
-		align = "lclr",
-		linesep = ""
-	) |>
+	kable(format = "latex",
+		  escape = FALSE,
+		  col.names = col_names,
+		  digits = 3,
+		  booktabs = TRUE,
+		  align = "lclr",
+		  linesep = "") |>
 	kable_styling() |>
 	pack_rows("Intercepts (at 22 months)",
 			  start_row = 1,
-			  end_row = 2
-	) |>
+			  end_row = 2) |>
 	pack_rows("Slopes (upper bound)",
 			  start_row = 3,
-			  end_row = 10
-	) |>
-	add_footnote("$\\beta$: median of the posterior distribution in the probability scale. 95\\% HDI: 95\\% highest density interval of the distribution. $p(\\text{ROPE})$: overlap between the 95\\% HDI and the ROPE, indicating the posterior probability that the true value of the coefficient is equivalent to zero.", notation = "none", escape = FALSE)
+			  end_row = 10)
 ```
 
 \elandscape
@@ -567,7 +520,8 @@ Around `r scales::percent(post_draws_list[["b_lv_std"]]$.rope, accuracy = 0.01)`
 #| fig-width: 7.5
 #| fig-height: 5
 #| eval: true
-#| fig-cap: "Posterior marginal effects for Comprehension (A) and for Production (B)and Production. Lines and error bands correspond to the mean and 95% credible interval of the posterior-predicted means. Different colour shades indicate different levels of cognateness (phonological similarity). Predictions are presented separately for different degrees of the word-form exposure index: little exposure to the word-form, mean exposure, and high exposure. In-sample predictions lie inside the grey rectangles. For reference, we indicate the 50% chance level of word acquisition (horizontal grey lines), and the mean age of the sample (grey lines)."
+#| out-width: 100%
+#| fig-cap: "Posterior marginal effects for *Comprehension* (A) and *Production* (B). Lines and error bands correspond to the mean and 95% credible interval of the posterior-predicted means. Different colour shades indicate different levels of cognateness (phonological similarity). Predictions are presented separately for different degrees of the word-form exposure index: little exposure to the word-form, mean exposure, and high exposure. In-sample predictions lie inside the grey rectangles. For reference, we indicate the 50% chance level of word acquisition (horizontal grey lines), and the mean age of the sample (grey lines)."
 fig_data <- model_epreds |>
 	ungroup() |>
 	reframe(.median = mean(.value),
@@ -578,7 +532,7 @@ fig_data <- model_epreds |>
 		   exposure = factor(exposure_std,
 		   				  levels = unique(exposure_std),
 		   				  labels = c("Low exposure (-1 SD)",
-		   				  		   "Mean exposure",
+		   				  		   "Mean exposure (0 SD)",
 		   				  		   "High exposure (+1 SD)"),
 		   				  ordered = TRUE),
 		   lv = factor(lv_std,
@@ -641,7 +595,7 @@ fig_data |>
 		  legend.justification = "right",
 		  legend.direction = "horizontal",
 		  legend.key.size = unit(1, "cm"),
-		  legend.key.height = unit(1, "cm")) +
+		  legend.key.height = unit(0.5, "cm")) +
 	
 	fig_data |>
 	filter(.category=="Production") |> 
@@ -776,3 +730,23 @@ Our study shares similar methodological limitations with previous work using voc
 The present study contributes with a specific data point to the complex landscape of bilingualism research. Bilinguals are a remarkably heterogeneous population difficult to be satisfactorily characterised in a comprehensive way [@sebastian-galles2020bilingual]. Bilinguals differ across multiple dimensions. Such differences span from exclusively linguistic factors; such as the amount of overlap between the phonemic inventories of the two languages being learned (e.g., low, like the case of English and Mandarin, or high, like the case of Spanish and Greek), to extralinguistic factors like the sociolinguistic situation in which the two languages co-exist (e.g., in some regions both languages are co-official and used in similar contexts, while in others, one of the languages has a smaller societal presence, i.e., heritage languages). This diversity of situations in which bilingual toddlers acquire language calls for special consideration of the generalisability of results in bilingualism research. Our sample, although homogeneous (e.g., similar parental educational level across participants), represents a particular bilingual sociolinguistic environment. The languages involved in the present investigation, Catalan and Spanish, co-exist in Catalonia as official languages, both languages are used in fairly similar contexts, and both languages are known by the majority of the population. In 2018, more than 81.2% of a representative sample of 8,780 adults aged 15 years or older living in Catalonia reported being able to speak Catalan, and more than 99.5% of the same population reported being able to speak Spanish [@2018els]. In addition, Catalan and Spanish are Romance languages and share a considerable amount of cognates. Extending our analyses to other bilingual populations learning typologically more distant languages, and whose languages tend to be used in more distinct contexts (e.g., heritage languages) should be a natural future step for the present investigation.
 
 To conclude, our study provides novel insights about word acquisition in bilingual contexts, and how the presence of cognates in the children's linguistic input impacts the early formation of the lexicon. We found that during the acquisition of low frequency words, bilingual children seem to benefit more strongly from the word-form's phonological similarity with its translation in the other language. Capitalising on the notion of accumulator of linguistic input, we put forward a theoretical account of bilingual word learning, in which cognateness interacts with lexical frequency and language exposure to boost the acquisition of translation equivalents.
+
+## Appendix A: Model details
+
+{{< include ../_appendix/_chapter-2_model-details.qmd >}}
+
+{{< pagebreak >}}
+
+## Appendix B: Frequency and language exposure as separate predictors
+
+{{< include ../_appendix/_chapter-2_model-doe.qmd >}}
+
+{{< pagebreak >}}
+
+## Appendix C: Syllable frequency
+
+{{< include ../_appendix/_chapter-2_syllable-frequency.qmd >}}
+
+{{< pagebreak >}}
+
+

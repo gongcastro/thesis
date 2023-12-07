@@ -12,7 +12,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(readr)
-library(gt)
+library(knitr)
+library(kableExtra)
 library(here)
 library(ggrepel)
 library(patchwork)
@@ -77,7 +78,7 @@ set.seed(1234)
 
 Building a mental lexicon is a major achievement in the development of an infant: by storing representations of how familiar words sound and what they mean, an infant is able to make sense of their linguistic input. The foundations of an initial lexicon are in place before the end the first year of life [@tincoff1999some; @halle1994emergence; @vihman2004cross; @parise2012electrophysiological; @bergelson20126; @bergelson2015early]. This initial lexicon consists of only a few items; mainly words for people, interjections, body parts, and food [@tincoff2012six; @tardif2008baby], but it undergoes rapid growth during the second year of life [@ganger2004reexamining; @goldfield1990early; @bloom2002children; @mcmurray2007defusing; @bergelson2020comprehension]. According to parental reports, the average 15-month-old infant already understands more than 100 words, and by two years of age, they understand more than 400 [@frank2021variability]. This accelerated lexical developmental is reflected in infants' trajectories of word recognition: infants recognise familiar words faster and more efficiently as they approach their second birthday [@fernald1998rapid; @fernald2001half; @hurtado2007spoken]. Despite being exposed to a more complex linguistic input, bilinguals show equivalent trajectories of word acquisition and word recognition to their monolingual peers' [@vihman2007onset; @legacy2018vocabulary; @hoff2012dual; @de2014bilingual; @pearson1994patterns; @byers-heinlein2023sometimes; @bialystok2009bilingualism]. This is a remarkable deed for two reasons. First, bilingual infants receive a relatively reduced linguistic input in each of their languages, compared to monolinguals [@costa2014does; @cattani2014much; @thordardottir2011relationship]. Second, they face a more complex referential context: they often learn two labels for each referent (one in each language), which additionally may not be direct translations of each other [@au1990principle; @tsui2022translation; @bilson2015semantic; @de2006early]. The mechanisms that allow bilingual' trajectories of lexical developmental to keep up with monolinguals' are still unclear.
 
-Previous studies have pointed to the similarity between the two languages of exposure as a facilitator of lexical acquisition in bilinguals [@floccia2018vocabulary; @blom2020cross; @gampe2021does]. @floccia2018vocabulary reported larger vocabulary sizes in bilingual toddlers leaning two languages that shared high lexical similarity. The authors collected parental reports of vocabulary data from a sample of 367 bilingual children living in the United Kingdom, who were learning English and an additional language (out of a diverse pool of 13 languages). The authors then calculated the average phonolexical similarity between English and each of the additional languages. English and Dutch shared the highest similarity, while English and Mandarin shared the lowest. Overall, children's vocabulary sizes in the additional language was positively associated with the amount of language similarity between their two languages. For instance, English-Dutch bilinguals showed larger vocabulary sizes in Dutch than English-Mandarin bilinguals did in Mandarin. The authors suggested that the acquisition of words in the additional language might be facilitated by their cognate status (i.e., being phonologically similar to their translation equivalent). If this is the case, larger vocabulary sizes might then be expected in bilinguals learning two languages sharing a high proportion of cognates. This would be consistent with available evidence of an earlier acquisition of cognate words [@bosch2014first; @mitchell2022cognates; @garcia2023cognate; @schelletter2002effect].
+Previous studies have pointed to the similarity between the two languages of exposure as a facilitator of lexical acquisition in bilinguals [@floccia2018vocabulary; @blom2020cross; @gampe2021does]. @floccia2018vocabulary reported larger vocabulary sizes in bilingual toddlers leaning two languages that shared high lexical similarity. The authors collected parental reports of vocabulary data from a sample of 367 bilingual children living in the United Kingdom, who were learning English and an additional language (out of a diverse pool of 13 languages). The authors then calculated the average phono-lexical similarity between English and each of the additional languages. English and Dutch shared the highest similarity, while English and Mandarin shared the lowest. Overall, children's vocabulary sizes in the additional language was positively associated with the amount of language similarity between their two languages. For instance, English-Dutch bilinguals showed larger vocabulary sizes in Dutch than English-Mandarin bilinguals did in Mandarin. The authors suggested that the acquisition of words in the additional language might be facilitated by their cognate status (i.e., being phonologically similar to their translation equivalent). If this is the case, larger vocabulary sizes might then be expected in bilinguals learning two languages sharing a high proportion of cognates. This would be consistent with available evidence of an earlier acquisition of cognate words [@bosch2014first; @mitchell2022cognates; @garcia2023cognate; @schelletter2002effect].
 
 The facilitation effect of cognateness is in line with the language non-selective account of bilingual lexical access. This account proposes that bilinguals activate both languages in parallel, even during monolingual situations. In adults, there is robust evidence in favour of this language non-selective account of lexical access [@marian1999activation; @groot1992determinants; @schwartz2007reading; @dijkstra1999recognition; @dufour1995matching; @dijkstra2010cross; @spivey1999cross]. @costa2000cognate presented highly-proficient Catalan-Spanish bilinguals with a series of pictures of familiar objects. Participants were asked to name each picture in Spanish. Unbeknownst to participants, the authors manipulated the cognate status pictures' labels in Catalan and Spanish. In half of the trials, the labels associated to the pictures were cognates (e.g., *cat*-*gat* [cat]), whereas in the other half of the trials the labels were non-cognates (e.g., *taula*-*mesa* [table]). Participants named pictures faster in cognate trials than in non-cognate trials. Spanish monolinguals showed equivalent naming times in both conditions. These results revealed that bilinguals activated their Catalan phonology, despite performing the naming task exclusively in Spanish: the visual recognition of the presented pictures led to the parallel activation of its associated phonological forms in both languages, which influenced the subsequent dynamics of word production.
 
@@ -126,13 +127,12 @@ n_participants_sessions <- participants_oxf |>
 	purrr::map("n")
 
 ages <- participants_oxf |>
-	summarise(
-		n = n(),
-		n_participants = n_distinct(child_id),
-		across(age, lst(mean, sd, min, max)),
-		across(matches("doe_"), lst(mean, sd)),
-		age_vctr = list(age),
-		.by = c(lp, test_language))
+	summarise(n = n(),
+			  n_participants = n_distinct(child_id),
+			  across(age, lst(mean, sd, min, max)),
+			  across(matches("doe_"), lst(mean, sd)),
+			  age_vctr = list(age),
+			  .by = c(lp, test_language))
 
 suppressWarnings({
 	time_diffs <- participants_oxf |>
@@ -144,14 +144,12 @@ suppressWarnings({
 			id_cols = child_id,
 			names_from = session_n,
 			values_from = age,
-			names_repair = janitor::make_clean_names
-		) |>
+			names_repair = janitor::make_clean_names) |>
 		rowwise() |>
 		mutate(diff_min = x2 - x1) |>
 		ungroup() |>
 		summarise(diff_min = min(diff_min, na.rm = TRUE))
 })
-
 ```
 
 We collected data from `r n_participants_total` children (`r n_participants_sex$n[1]` female, `r n_participants_sex$n[2]` male, with `r english::words(n_participants_sex$n[3])` additional participants' sex not being reported; Age: *Mean* = `r round(ages$age_mean, 2)` months, *SD* = `r round(ages$age_sd, 2)`, *Range* = `r round(ages$age_min, 2)`--`r round(ages$age_max, 2)`) (see @tbl-participants for a detailed summary of participants' age and language profile), living in the Oxfordshire area (United Kingdom). Participants were tested at the Oxford BabyLab at the University of Oxford. Families were recruited from maternity rooms in private hospitals and social media, and contacted via phone when the child's age spanned between 20 and 32 months. From the `r n_participants_total` children that participated, `r n_participants_sessions$session_1` participated once, and `r n_participants_sessions$session_2` participated twice. Recurrent participants were tested with at least `r round(time_diffs, 2)$diff_min` months of difference. We gathered a total of `r n_sessions_total$n` testing sessions. All participants were being raised in exclusively British English monolingual homes. Participants' vision was normal, none used glasses or any other type of vision corrector.
@@ -162,7 +160,7 @@ We collected data from `r n_participants_total` children (`r n_participants_sex$
 
 ```{r tbl-participants}
 #| label: tbl-participants
-#| tbl-cap: "Demographic and linguistic profile of testing sessions. The number of excluded testing sessions and participants is indicated between parentheses."
+#| tbl-cap: "Demographic and linguistic profile of testing sessions in Study 1. The number of excluded testing sessions and participants is indicated between parentheses."
 tbl_data <- participants |>
 	separate(doe, c("doe_spanish", "doe_catalan", 
 					"doe_english", "doe_other"), 
@@ -182,7 +180,6 @@ tbl_data <- participants |>
 			  n_participants = length(unique(child_id)),
 			  across(age, lst(mean, sd)),
 			  across(matches("doe_"), lst(mean, sd)),
-			  # age_vctr = list(age),
 			  .by = c(lp, study, test_language, is_valid_participant)) |>
 	pivot_wider(
 		id_cols = c(lp, study, test_language),
@@ -190,48 +187,40 @@ tbl_data <- participants |>
 		values_from = is.numeric) |>
 	select(lp, study, test_language, starts_with("n_"), matches("TRUE"),
 		   n_FALSE, n_participants_FALSE) |>
-	rename_with(\(x) gsub("_TRUE", "", x))
+	arrange(study, lp, test_language) |> 
+	rename_with(\(x) gsub("_TRUE", "", x)) |> 
+	mutate(n = paste0(n, " (", n_FALSE, ")"),
+		   n_participants = paste0(n_participants, " (", n_participants_FALSE, ")"),
+		   age = sprintf("%.2f (%.2f)", age_mean, age_sd),
+		   across(matches("doe_"), \(x) x*100),
+		   doe_spa = sprintf("%.2f (%.2f)", doe_spanish_mean, doe_spanish_sd),
+		   doe_cat = sprintf("%.2f (%.2f)", doe_catalan_mean, doe_catalan_sd),
+		   doe_eng = sprintf("%.2f (%.2f)", doe_english_mean, doe_english_sd)) |> 
+	select(test_language, n, n_participants, age, doe_eng, doe_cat, doe_spa) 
 
-gt(tbl_data,
-   rowname_col = "test_language",
-   groupname_col = c("study", "lp"))  %>%
-	# grand_summary_rows(
-	# 	columns = matches("age"),
-	# 	fns = list(Total ~ mean(.)),
-	# 	fmt = \(x)  fmt_number(x, decimals = 2)) 
-	# grand_summary_rows(columns = c(n, n_participants),
-	# 				   fns = list(Total ~ sum(.)),
-	# 				   fmt = ~ fmt_integer(.)) |>
-	fmt_number(where(is.numeric), decimals = 2) |>
-	fmt_integer(c(n, n_participants, n_FALSE, n_participants_FALSE)) |>
-	fmt_number(matches("doe"), decimals = 2, scale_by = 100) |> 
-	cols_merge(c(n, n_FALSE), pattern = "{1} ({2})") |>
-	cols_merge(c(n_participants, n_participants_FALSE),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(age_mean, age_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(doe_catalan_mean, doe_catalan_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(doe_english_mean, doe_english_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(doe_spanish_mean, doe_spanish_sd),
-			   pattern = "{1} ({2})") |>
-	tab_spanner("Sample size", starts_with("n")) |>
-	tab_spanner("Age (months)", matches("age")) |>
-	tab_spanner("Catalan", matches("catalan")) |>
-	tab_spanner("English", matches("english")) |>
-	tab_spanner("Spanish", matches("spanish")) |>
-	tab_spanner("Degree of Exposure (%)", matches("doe")) |>
-	cols_label(n = "Test sessions",
-			   n_participants = "Participants",
-			   age_mean = "M (SD)",
-			   doe_catalan_mean = "M (SD)",
-			   doe_english_mean = "M (SD)",
-			   doe_spanish_mean = "M (SD)") |>
-	tab_style(cell_text(style = "italic"),
-			  cells_column_labels()) |>
-	tab_style(cell_text(style = "italic"),
-			  cells_column_spanners())
+kable(tbl_data,
+	  format = "latex",
+	  digits = 1,
+	  booktabs = TRUE,
+	  escape = FALSE,
+	  col.names = c(" ", "Test sessions", "Participants",
+	  			  "\\textit{M} (\\textit{SD})", 
+	  			  "\\textit{M} (\\textit{SD})", 
+	  			  "\\textit{M} (\\textit{SD})",
+	  			  "\\textit{M} (\\textit{SD})"),
+	  align = "lrrrrr") |> 
+	add_header_above(c(" " = 1,
+					   "Sample size" = 2,
+					   "Age (months)" = 1,
+					   "English" = 1,
+					   "Catalan" = 1,
+					   "Spanish" = 1)) |> 
+	add_header_above(c(" " = 4,
+					   "Degree of Exposure (%)" = 3)) |> 
+	pack_rows(index = c("Study 1: Monolingual" = 1,
+						"Study 2: Monolingual" = 2,
+						"Study 2: Bilingual" = 2)) |> 
+	row_spec(c(1, 3), hline_after = TRUE)
 ```
 
 \elandscape
@@ -248,14 +237,13 @@ We collected vocabulary data using parental responses to the Oxford Communicativ
 
 ```{r fig-vocabulary}
 #| label: fig-vocabulary-oxf
-#| fig-cap: "Participant receptive vocabulary sizes across ages and language profiles."
+#| fig-cap: "Participant receptive vocabulary sizes across ages and language profiles. For descritive purposes, mean and standard error of the mean are indicated, as calculated using a linear regression model."
 #| fig-width: 5
 #| fig-height: 4
 #| out-width: 70%
 vocab_plot_data <- vocabulary |>
 	inner_join(dplyr::filter(attrition_participants, is_valid_participant),
-			   by = join_by(session_id)
-	) |>
+			   by = join_by(session_id)) |>
 	inner_join(
 		select(
 			participants, location, lp, age,
@@ -340,7 +328,14 @@ Participants were presented with 32 trials in random order, which belonged to tw
 
 @fig-task illustrates the sequence of a trial. Each trial started with the presentation of an attention getter for 3,000 ms. Then, the prime picture was presented in silence in the centre of the screen for 1,500 milliseconds. Fifty milliseconds after the offset of the prime image, an auditory label was played, 700 milliseconds after the onset of the word, the target and distractor pictures were presented side-by-side during 1,000 milliseconds until the end of the trial. After this, the attention getter of the next trial was immediately presented. Each experimental session lasted approximately 10 minutes.
 
+
+\newpage
+
+\blandscape
+
 ![Experimental task design with examples in Catalan. In each trial, the prime image is presented in silence for 1,500 ms. Then the auditory target label is presented, and finally the target and distractor pictures are presented side-by-side for 2,000 ms. In cognate trials (*n* = 8), Catalan *and* Spanish prime labels shared phonological onset with the target label. In non-cognate trials (*n* = 8), only the Catalan prime label shared phonological onset with the target label. In unrelated trials (*n* = 16), none of the prime labels shared phonological onset with the target label.](../_assets/img/design.png){#fig-task fig-align="center"}
+
+\elandscape
 
 #### Stimuli
 
@@ -365,8 +360,8 @@ We created four lists of trials, across which the same target-distractor pair ap
 
 ```{r tbl-stimuli}
 #| label: tbl-stimuli
-#| tbl-cap: "Summary of stimuli properties by trial type. Values are summarised using the mean and the standard deviation (between parentheses)."
-stimuli |>
+#| tbl-cap: "Summary of stimuli properties in Studies 1 and 2 by trial type. Values are summarised using the mean and the standard deviation (between parentheses)."
+tbl_data <- stimuli |>
 	separate(freq, paste0("freq_", c("prime", "target", "distractor")),
 			 sep = ", ") |>
 	separate(nphon, paste0("nphon_", c("prime", "target", "distractor")),
@@ -381,52 +376,48 @@ stimuli |>
 	select(-c(matches("distractor"))) |>
 	mutate(test_language = if_else(test_language == "English",
 								   paste0("Study 1: ", test_language),
-								   paste0("Study 2: ", test_language))) |>
+								   paste0("Study 2: ", test_language)),
+		   trial_type = case_when(trial_type=="Cognate" ~ "Related/Cognate",
+		   					   trial_type=="Non-cognate" ~ "Related/Non-cognate",
+		   					   trial_type=="Unrelated" ~ "Unrelated",
+		   					   .default = NA),
+		   nphon_prime = sprintf("%.2f (%.2f)",
+		   					  nphon_prime_mean, nphon_prime_sd),
+		   nphon_target = sprintf("%.2f (%.2f)", 
+		   					   nphon_target_mean, nphon_target_sd),
+		   freq_prime = sprintf("%.2f (%.2f)", 
+		   					 freq_prime_mean, freq_prime_sd),
+		   freq_target = sprintf("%.2f (%.2f)",
+		   					  freq_target_mean, freq_target_sd),
+		   fam_prime = sprintf("%.2f (%.2f)", 
+		   					familiarity_prime_mean, familiarity_prime_sd),
+		   fam_target = sprintf("%.2f (%.2f)", 
+		   					 familiarity_target_mean, familiarity_target_sd)) |> 
 	arrange(test_language) |> 
-	gt(rowname_col = "trial_type",
-	   groupname_col = "test_language") |>
-	# summary_rows(groups = c("Unrelated", "Non-cognate", "Cognate"),
-	# 			 columns = is.numeric,
-	# 			 fns = list(Total ~ mean(.)),
-	# 			 fmt = ~ fmt_number(., decimals = 2)) |>
-	# grand_summary_rows(
-	# 	columns = matches("phon|freq"),
-	# 	fns = list(Total ~ mean(.)),
-	# 	fmt = ~ fmt_number(., decimals = 2)
-	# ) |>
-	# grand_summary_rows(
-	# 	columns = matches("familiarity"),
-# 	fns = list(Total ~ mean(.)),
-# 	fmt = ~ fmt_number(., decimals = 2, scale_by = 100)
-# ) |>
-tab_spanner("# Phonemes", matches("nphon")) |>
-	tab_spanner("Frequency (Zipf)", matches("freq")) |>
-	tab_spanner("Familiarity (%)", matches("familiarity")) |>
-	fmt_number(is.numeric, decimals = 2) |>
-	fmt_number(matches("familiarity"), decimals = 2, scale_by = 100) |>
-	cols_merge(c(freq_prime_mean, freq_prime_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(freq_target_mean, freq_target_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(familiarity_prime_mean, familiarity_prime_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(familiarity_target_mean, familiarity_target_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(nphon_prime_mean, nphon_prime_sd),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(nphon_target_mean, nphon_target_sd),
-			   pattern = "{1} ({2})") |>
-	cols_label(	trial_type = "",
-				familiarity_prime_mean = "Prime",
-				familiarity_target_mean = "Target",
-				freq_prime_mean = "Prime",
-				freq_target_mean = "Target",
-				nphon_prime_mean = "Prime",
-				nphon_target_mean = "Target")
-# tab_style(list(cell_text(style = "italic")),
-# 		  list(cells_column_labels(),
-# 		  	 cells_column_spanners(),
-# 		  	 cells_grand_summary()))
+	select(trial_type, matches("nphon|freq|fam"), -matches("mean|sd"))
+
+
+kable(tbl_data,
+	  format = "latex",
+	  digits = 1,
+	  booktabs = TRUE,
+	  escape = FALSE,
+	  col.names = c("Condition",
+	  			  "\\textit{M} (\\textit{SD})", 
+	  			  "\\textit{M} (\\textit{SD})", 
+	  			  "\\textit{M} (\\textit{SD})",
+	  			  "\\textit{M} (\\textit{SD})", 
+	  			  "\\textit{M} (\\textit{SD})", 
+	  			  "\\textit{M} (\\textit{SD})"),
+	  align = "lrrrrrr")  |> 
+	add_header_above(c(" " = 1,
+					   "Word length (phonemes)" = 2,
+					   "Lexical frequency (Zipf)" = 2,
+					   "Familiarity (%)" = 2)) |> 
+	pack_rows(index = c("Study 1: English" = 3,
+						"Study 2: Catalan" = 3,
+						"Study 2: Spanish" = 3)) |> 
+	row_spec(c(3, 6), hline_after = TRUE)
 ```
 
 \elandscape
@@ -498,68 +489,6 @@ We gathered data from `r format(n_trials, big.mark = ",")` trials from `r n_sess
 
 After trials that matched any of the aforementioned exclusion criteria from the data set, we excluded participants who did not provide at least two valid trials in each condition (*n* = `r n_exc_participants`), and participants with a vocabulary size lower than 42, which corresponds to 10% of the words in the OCDI vocabulary checklist (*n* = `r n_exc_participants_vocab`). The final data set included `r format(n_trials_valid, big.mark = ",")` trials from `r n_sessions_valid` testing sessions, generated by `r format(n_participants_valid, big.mark = ",")` distinct participants. Of those participants, `r n_longitudinal[1, 2]` provided data from one experimental session, `r n_longitudinal[2, 2]` provided data from two experimental sessions, and `r n_longitudinal[3, 2]` provided data from three experimental sessions. From the trials included in the final data set, `r n_trials_condition$unrelated_2$n` were *Unrelated* trials (`r n_trials_condition$unrelated$n` previously excluded), and `r n_trials_condition$non_cognate_2$n + n_trials_condition$cognate_2$n` were *Related*  trials(`r n_trials_condition$non_cognate$n + n_trials_condition$cognate$n` previously excluded).
 
-\newpage
-
-\blandscape
-
-```{r tbl-attrition}
-#| label: tbl-attrition
-#| tbl-cap: "Participant-level and trial-level sample size after applying inclusion criteria. The number of excluded participants and trials is indicated between parentheses."
-expanded <- expand(attrition, lp, trial_type, is_valid_trial)
-
-n_lp <- attrition |>
-	distinct(is_valid_participant, lp, session_id) |>
-	count(is_valid_participant, lp) |>
-	pivot_wider(names_from = is_valid_participant,
-				values_from = n,
-				names_repair = janitor::make_clean_names) |>
-	mutate(n_participants_true = true,
-		   n_participants_false = false) |>
-	select(lp, true, false)
-
-attrition |>
-	mutate(study = if_else(location == "Oxford",
-						   "Study 1: English (Oxford)",
-						   "Study 2: Catalan/Spanish (Barcelona)")) |>
-	summarise(n_trials_true = sum(is_valid_trial),
-			  n_trials_false = sum(!is_valid_trial),
-			  .by = c(lp, trial_type, study)) |>
-	arrange(study, desc(lp)) |>
-	pivot_wider(id_cols = c(study, lp),
-				names_from = c(trial_type),
-				values_from = matches("trials"),
-				names_repair = janitor::make_clean_names) |>
-	left_join(n_lp, by = join_by(lp)) |>
-	select(study, lp, true, false, matches("n_trials")) |>
-	gt(rowname_col = "lp",
-	   groupname_col = "study") |>
-	tab_spanner("Participants", matches("participant")) |>
-	tab_spanner("Trials", matches("trial")) |>
-	fmt_integer(everything()) |>
-	cols_merge(c(true, false), pattern = "{1} ({2})") |>
-	cols_merge(c(n_trials_true_cognate, n_trials_false_cognate),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(n_trials_true_non_cognate, n_trials_false_non_cognate),
-			   pattern = "{1} ({2})") |>
-	cols_merge(c(n_trials_true_unrelated, n_trials_false_unrelated),
-			   pattern = "{1} ({2})") |>
-	cols_label(
-		true = "Participants",
-		n_trials_true_cognate = "Cognate",
-		n_trials_true_non_cognate = "Non-cognate",
-		n_trials_true_unrelated = "Unrelated") |>
-	tab_style(
-		cell_text(style = "italic"),
-		cells_column_labels()) |>
-	tab_style(
-		cell_text(align = "left"),
-		cells_stub())
-# grand_summary_rows(
-# 	fns = list(label = md("*N*")) ~ sum(.),
-# 	fmt = ~ fmt_integer(.))
-```
-
-\elandscape
 
 ```{r data-analysis}
 
@@ -670,10 +599,9 @@ Second, we examined the differences between the priming conditions in the time c
 
 ```{r fig-epreds-oxf}
 #| label: fig-epreds-oxf
-#| fig-cap: "A) Posterior mean predictions of the time course of target fixation in the test phase. B) Posterior mean prediction of the time course of the differences in target looking time between conditions. Intervals represent the 95% CrI of the posterior predictions. Lines indicate the mean of the posterior predictions."
+#| fig-cap: "Time course of target fixations in Study 1. A) Posterior mean predictions of the time course of target fixation in the test phase. B) Posterior mean prediction of the time course of the differences in target looking time between conditions. Intervals represent the 95% CrI of the posterior predictions. Lines indicate the mean of the posterior predictions."
 #| fig-width: 6.5
 #| fig-height: 6.5
-#| out-width: 80%
 make_std <- function(x, mean, sd) (x - mean) / sd
 
 timebin_values <- make_std(
@@ -729,17 +657,31 @@ plot_epreds <- epreds |>
 		 shape = "Condition") +
 	scale_y_continuous(limits = c(-0.75, 1.25)) +
 	scale_shape_manual(values = c(1, 2)) +
-	theme(panel.grid.major.y = element_line(
-		colour = "grey",
-		linetype = "dotted"))
+	scale_linetype_manual(values = rev(c("solid", "dashed", "dotdash"))) +
+	theme(panel.grid.major.y = element_line(colour = "grey",
+											linetype = "dotted"))
 
 epreds_diff <- epreds |>
-	pivot_wider(
-		id_cols = c(timebin_std, .draw),
-		names_from = "condition",
-		values_from = ".epred",
-		names_repair = janitor::make_clean_names) |>
+	pivot_wider(id_cols = c(timebin_std, .draw),
+				names_from = "condition",
+				values_from = ".epred",
+				names_repair = janitor::make_clean_names) |>
 	mutate(.epred = related - unrelated)
+
+diffs_summary <- epreds_diff |>
+	ungroup() |>
+	summarise(.value = tidybayes::mean_qi(.epred)[[1]],
+			  .lower = tidybayes::mean_qi(.epred)[[2]],
+			  .upper = tidybayes::mean_qi(.epred)[[3]],
+			  .by = c(timebin_std))
+
+diffs_obs <- obs |> 
+	pivot_wider(id_cols = c(timebin_std),
+				names_from = "condition",
+				values_from = ".elog",
+				names_repair = janitor::make_clean_names) |>
+	mutate(.epred = related - unrelated)
+
 
 plot_diffs <- epreds_diff |>
 	ggplot(aes(timebin_std, .epred)) +
@@ -751,15 +693,21 @@ plot_diffs <- epreds_diff |>
 			 ymax = rope_interval[2],
 			 xmin = -Inf,
 			 xmax = Inf) +
-	stat_summary(fun.data = tidybayes::mean_qi,
-				 geom = "ribbon",
-				 fill = "grey",
-				 linewidth = NA,
-				 alpha = 3 / 4) +
-	stat_summary(fun = mean,
-				 geom = "line",
-				 colour = "black",
-				 linewidth = 3 / 4) +
+	geom_ribbon(data = diffs_summary,
+				aes(ymin = .lower,
+					ymax = .upper,
+					y = .value),
+				fill = "grey",
+				linewidth = NA,
+				alpha = 3 / 4) +
+	geom_line(data = diffs_summary,
+			  aes(y = .value),
+			  colour = "black",
+			  linewidth = 3 / 4) +
+	geom_point(data = diffs_obs,
+			   shape = 1,
+			   stroke = 1,
+			   size = 2) +
 	# geom_hline(yintercept = rope_interval[1],
 	# 		   colour = "red",
 	# 		   linetype = "dotted") +
@@ -771,7 +719,7 @@ plot_diffs <- epreds_diff |>
 		 colour = "Comparison",
 		 fill = "Comparison",
 		 linetype = "Comparison") +
-	scale_y_continuous(limits = c(-0.25, 0.5)) +
+	# scale_y_continuous(limits = c(-0.25, 0.5)) +
 	theme(panel.grid.major.y = element_blank())
 
 plot_epreds + plot_diffs +
@@ -792,14 +740,10 @@ plot_epreds + plot_diffs +
 
 To test our hypotheses regarding the role of age and vocabulary size on the emergence of priming effects, we compared the fit of model $\mathcal{M}_0$ against the fit of other models including the two-way interaction between *Condition* and *Age* ($\mathcal{M}_1$), or the two-way interaction between *Condition* and *Vocabulary* ($\mathcal{M}_2$), and all main effects involved. As with *Age*, the *Vocabulary* predictor was standardised before entering the model. We compared the models using one-out cross-validation (LOO-CV) as a benchmark of model performance, using a Pareto-smoothed importance sampling (PSIS) approximation [@vehtari2017practical]. A better performance by models $\mathcal{M}_1$ or $\mathcal{M}_2$ over $\mathcal{M}_0$ would point to *Age* or *Vocabulary*, respectively, playing a substantial role in participants' word-recognition, or on the emergence of priming effects. @tbl-loos-oxf shows a summary of the predictive performance of the models, as quantified by the expected log-predictive density (*ELPD*), and its standard error (*SE*, a measure of uncertainty around the *ELPD*). Overall, all models, performed equivalently, as shown by the small difference in *ELPD*, relative to the uncertainty of the estimates. This suggests that participants' target looking during the test phase can be predicted with relative accuracy without taking into account the age or vocabulary size of the participants.
 
-\newpage
-
-\blandscape
-
 ```{r tbl-loos-oxf}
 #| label: tbl-loos-oxf
-#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. *ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff)*: standard error of component-wise differences of *ELPD* between two models."
-brms::loo_compare(model_loos_oxf) |>
+#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. $\\Delta ELDP$: pairwise difference in $ELPD$ for two models. The difference is computed relative to the model with lowest $ELPD$ (best fitting model). $\\Delta ELDP_{SE}$: standard error of component-wise differences of *ELPD* between two models. $ELDP$: sum of expected log pointwise predictive density for a new data set. $ELDP_{SE}$: standard error of the $ELPD$, which indictes the uncertainty about the predictive performance for unknown future data." 
+tbl_data <- brms::loo_compare(model_loos_oxf) |>
 	as.data.frame() |>
 	tibble::rownames_to_column("model") |>
 	mutate(model = paste0(
@@ -810,24 +754,33 @@ brms::loo_compare(model_loos_oxf) |>
 			   	x[1] <- NA
 			   	return(x)
 			   }),
-		model = case_when(model == "Model 0" ~ "Model 0 (Age as main effect)",
-						  model == "Model 1" ~ "Model 1 (Age-by-condition)",
-						  model == "Model 2" ~ "Model 2 (Vocabulary by-condition)",
-						  .default = model)) |>
-	select(model, matches("elpd|diff")) |>
-	relocate(matches("diff"), .after = matches("loo")) |>
-	gt(rowname_col = "model") |>
-	fmt_number(is.numeric) |>
-	cols_label(elpd_diff = "ELPD (diff)",
-			   se_diff = "SE ELPD (diff)",
-			   elpd_loo = "ELPD",
-			   se_elpd_loo = "SE ELPD") |>
-	fmt_missing(missing_text = "---") |>
-	tab_footnote(footnote = md("*ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff)*: standard error of component-wise differences of *ELPD* between two models.")) 
-# tab_style(cell_text(style = "italic"), cells_column_labels())
-```
+		preds = case_when(
+			model=="Model 0" ~ "$\\text{Age} + \\text{Condition}$",
+			model=="Model 1" ~ "$\\text{Age} \\times \\text{Condition}$",
+			model=="Model 2" ~ "$\\text{Vocabulary} \\times \\text{Condition}$"
+		),
+		model = case_when(
+			model=="Model 0" ~ "$\\mathcal{M}_0$",
+			model=="Model 1" ~ "$\\mathcal{M}_1$",
+			model=="Model 2" ~ "$\\mathcal{M}_2$",
+			.default = model),
+	) |>
+	select(model, preds, matches("elpd|diff")) |>
+	relocate(matches("diff"), .after = matches("loo")) 
 
-\elandscape
+kable(tbl_data,
+	  format.args = list(big.mark = ","), 
+	  format = "latex",
+	  digits = 2,
+	  booktabs = TRUE,
+	  escape = FALSE,
+	  col.names = c(" ", "Predictors",
+	  			  "$ELDP$", 
+	  			  "$ELDP_{SE}$",
+	  			  "$\\Delta ELDP$", 
+	  			  "$\\Delta ELDP_{SE}$"),
+	  align = "lrrrrr") 
+```
 
 ### Discussion
 
@@ -949,7 +902,7 @@ Following the same procedure as in Study 1, we calculated participants' vocabula
 
 ```{r fig-vocabulary}
 #| label: fig-vocabulary-bcn
-#| fig-cap: "Participant receptive vocabulary sizes across ages and language profiles."
+#| fig-cap: "Participant receptive vocabulary sizes across ages and language profiles in Study 2. For descritive purposes, mean and standard error of the mean are indicated, as calculated using a linear regression model."
 #| fig-width: 6
 #| fig-height: 3
 vocab_plot_data |>
@@ -957,39 +910,28 @@ vocab_plot_data |>
 	dplyr::filter(study == "Study 2 (Catalan/Spanish)") |>
 	ggplot(aes(age, l1_count)) +
 	facet_wrap(~lp) +
-	geom_point(
-		size = 2,
-		shape = 1,
-		colour = "grey",
-		alpha = 3 / 4,
-		stroke = 1
-	) +
-	geom_smooth(
-		method = "lm",
-		formula = "y ~ x",
-		colour = "black",
-		fill = "black"
-	) +
-	labs(
-		x = "Age (months)",
-		y = "Vocabulary size",
-		colour = "Group",
-		fill = "Group"
-	) +
+	geom_point(size = 2,
+			   shape = 1,
+			   colour = "grey",
+			   alpha = 3 / 4,
+			   stroke = 1) +
+	geom_smooth(method = "lm",
+				formula = "y ~ x",
+				colour = "black",
+				fill = "black") +
+	labs(x = "Age (months)",
+		 y = "Vocabulary size",
+		 colour = "Group",
+		 fill = "Group") +
 	scale_x_continuous(breaks = seq(0, 40, 2)) +
-	scale_y_continuous(
-		limits = c(0, 575),
-		breaks = seq(0, 1e3, 100)
-	) +
-	theme(
-		panel.grid.major.y = element_line(
-			linetype = "dotted",
-			colour = "grey"
-		),
+	scale_y_continuous(limits = c(0, 575),
+					   breaks = seq(0, 1e3, 100)) +
+	theme(panel.grid.major.y = element_line(
+		linetype = "dotted",
+		colour = "grey"),
 		legend.position = "none",
 		axis.title.x = element_blank(),
-		legend.title = element_blank()
-	)
+		legend.title = element_blank())
 ```
 
 #### Design
@@ -1065,28 +1007,23 @@ After excluding trials that matched any of the aforementioned criteria from the 
 #### Priming effects
 
 ```{r coefs}
-var_labels <- c(
-	"b_Intercept" = "Intercept",
-	"b_age_std" = "Age (+1 SD)",
-	"b_lp1" = "Group",
-	"b_condition1" = "Condition (U vs. RN)",
-	"b_condition2" = "Condition (RN vs. RC)",
-	"b_condition1:lp1" = "Group \U00D7 Condition (U vs. RN)",
-	"b_condition2:lp1" = "Group \U00D7 Condition (RN vs. RC)"
-)
+var_labels <- c("b_Intercept" = "Intercept",
+				"b_age_std" = "Age (+1 SD)",
+				"b_lp1" = "Group",
+				"b_condition1" = "Condition (U vs. RN)",
+				"b_condition2" = "Condition (RN vs. RC)",
+				"b_condition1:lp1" = "Group \U00D7 Condition (U vs. RN)",
+				"b_condition2:lp1" = "Group \U00D7 Condition (RN vs. RC)")
 
 model_summary <- get_posterior_summary(model_fits_bcn$fit_0,
 									   data_bcn,
 									   vars_dict = var_labels,
-									   rope_interval = rope_interval
-)
+									   rope_interval = rope_interval)
 
 coefs <- model_summary |>
-	mutate(
-		.value = sprintf("%.3f", .value),
-		.ci = sprintf("[%.3f, %.3f]", .lower, .upper),
-		.rope = scales::percent(.rope, accuracy = 0.01)
-	) |>
+	mutate(.value = sprintf("%.3f", .value),
+		   .ci = sprintf("[%.3f, %.3f]", .lower, .upper),
+		   .rope = scales::percent(.rope, accuracy = 0.01)) |>
 	split(janitor::make_clean_names(model_summary$.variable))
 ```
 
@@ -1100,24 +1037,22 @@ make_std <- function(x, mean, sd) (x - mean) / sd
 timebin_values <- make_std(
 	seq(0, 16, length.out = 100),
 	mean(data_bcn$timebin),
-	sd(data_bcn$timebin)
-)
+	sd(data_bcn$timebin))
 
 age_values <- make_std(
 	c(20, 32),
 	mean(data_bcn$age),
-	sd(data_bcn$age)
-)
+	sd(data_bcn$age))
 
 nd <- expand_grid(distinct(data_bcn, condition, lp),
-				  age_std = 0, timebin_std = timebin_values
-)
+				  age_std = 0, timebin_std = timebin_values)
 
 epreds <- tidybayes::add_epred_draws(nd,
 									 model_fits_bcn$fit_0,
 									 ndraws = NULL,
-									 re_formula = NA
-)
+									 re_formula = NA) |> 
+	mutate(lp = factor(lp, levels = c("Monolingual", "Bilingual")))
+
 ```
 
 An analysis of the time course of target looking revealed a similar pattern of results (see @fig-epreds). Posterior mean prediction for the three conditions overlap across the full time course of the trial in both language groups.
@@ -1125,91 +1060,91 @@ An analysis of the time course of target looking revealed a similar pattern of r
 
 ```{r fig-epreds}
 #| label: fig-epreds
-#| fig-cap: "A) Posterior mean predictions of the time course of target fixation in the test phase. B) Posterior mean prediction of the time course of the differences in target looking time between conditions. Intervals represent the 95% CrI of the posterior predictions. Lines indicate the mean of the posterior predictions."
+#| fig-cap: "Time course of target fixations in Study 2. A) Posterior mean predictions of the time course of target fixation in the test phase. B) Posterior mean prediction of the time course of the differences in target looking time between conditions. Intervals represent the 95% CrI of the posterior predictions. Lines indicate the mean of the posterior predictions."
 #| fig-width: 8
 #| fig-height: 8
 epreds_summary <- epreds |>
 	ungroup() |>
-	summarise(
-		.value = tidybayes::mean_qi(.epred)[[1]],
-		.lower = tidybayes::mean_qi(.epred)[[2]],
-		.upper = tidybayes::mean_qi(.epred)[[3]],
-		.by = c(lp, condition, timebin_std)
-	)
+	summarise(.value = tidybayes::mean_qi(.epred)[[1]],
+			  .lower = tidybayes::mean_qi(.epred)[[2]],
+			  .upper = tidybayes::mean_qi(.epred)[[3]],
+			  .by = c(lp, condition, timebin_std)) 
 
 obs <- data_bcn |>
-	summarise(
-		.elog = mean(.elog),
-		.by = c(timebin_std, condition)
-	)
+	summarise(.elog = mean(.elog),
+			  .by = c(timebin_std, lp, condition)) |> 
+		mutate(lp = factor(lp, levels = c("Monolingual", "Bilingual")))
+
 plot_epreds <- epreds |>
 	ggplot(aes(timebin_std, .epred,
 			   colour = condition,
 			   fill = condition,
 			   linetype = condition,
-			   shape = condition
-	)) +
+			   shape = condition)) +
 	facet_wrap(~lp) +
-	stat_summary(
-		fun.data = tidybayes::mean_qi,
-		geom = "ribbon",
-		alpha = 1 / 4,
-		linewidth = NA
-	) +
-	stat_summary(
-		fun = "mean",
-		geom = "line",
-		# colour = "black",
-		linewidth = 3 / 4
-	) +
-	geom_hline(
-		yintercept = 0,
-		colour = "grey"
-	) +
-	geom_point(
-		data = obs,
-		aes(y = .elog),
-		size = 2,
-		stroke = 1
-	) +
-	labs(
-		x = "Time (ms)",
-		y = "Logit (Target looking)",
-		colour = "Condition",
-		fill = "Condition",
-		linetype = "Condition",
-		shape = "Condition"
-	) +
+	stat_summary(fun.data = tidybayes::mean_qi,
+				 geom = "ribbon",
+				 alpha = 1 / 4,
+				 linewidth = NA) +
+	stat_summary(fun = "mean",
+				 geom = "line",
+				 linewidth = 3 / 4) +
+	geom_hline(yintercept = 0,
+			   colour = "grey") +
+	geom_point(data = obs,
+			   aes(y = .elog),
+			   size = 2,
+			   stroke = 1) +
+	labs(x = "Time (ms)",
+		 y = "Logit (Target looking)",
+		 colour = "Condition",
+		 fill = "Condition",
+		 linetype = "Condition",
+		 shape = "Condition") +
+	scale_linetype_manual(values = rev(c("solid", "dashed", "dotdash"))) +
 	scale_y_continuous(limits = c(-0.75, 1.25)) +
 	theme(panel.grid.major.y = element_line(
 		colour = "grey",
-		linetype = "dotted"
-	))
-
+		linetype = "dotted"))
 
 epreds_diff <- epreds |>
-	pivot_wider(
-		id_cols = c(lp, timebin_std, .draw),
-		names_from = "condition",
-		values_from = ".epred",
-		names_repair = janitor::make_clean_names
-	) |>
-	mutate(
-		diff_1 = related_non_cognate - unrelated,
-		diff_2 = related_cognate - related_non_cognate
-	) |>
+	pivot_wider(id_cols = c(lp, timebin_std, .draw),
+				names_from = "condition",
+				values_from = ".epred",
+				names_repair = janitor::make_clean_names) |>
+	mutate(diff_1 = related_non_cognate - unrelated,
+		   diff_2 = related_cognate - related_non_cognate) |>
 	pivot_longer(matches("diff"),
 				 names_to = "diff",
 				 values_to = ".epred",
-				 names_prefix = "diff_"
-	) |>
+				 names_prefix = "diff_") |>
 	mutate(diff = factor(diff,
 						 levels = c(1, 2),
-						 labels = c(
-						 	"Related/Non-cognate - Unrelated",
-						 	"Related/Cognate - Related/Non-cognate"
-						 )
-	))
+						 labels = c("Related/Non-cognate - Unrelated",
+						 		   "Related/Cognate - Related/Non-cognate")))
+
+diffs_summary <- epreds_diff |>
+	ungroup() |>
+	summarise(.value = tidybayes::mean_qi(.epred)[[1]],
+			  .lower = tidybayes::mean_qi(.epred)[[2]],
+			  .upper = tidybayes::mean_qi(.epred)[[3]],
+			  .by = c(diff, lp, timebin_std))
+
+diffs_obs <- obs |> 
+	pivot_wider(id_cols = c(lp, timebin_std),
+				names_from = "condition",
+				values_from = ".elog",
+				names_repair = janitor::make_clean_names) |>
+	mutate(diff_1 = related_non_cognate - unrelated,
+		   diff_2 = related_cognate - related_non_cognate) |>
+	pivot_longer(matches("diff"),
+				 names_to = "diff",
+				 values_to = ".epred",
+				 names_prefix = "diff_") |>
+	mutate(diff = factor(diff,
+						 levels = c(1, 2),
+						 labels = c("Related/Non-cognate - Unrelated",
+						 		   "Related/Cognate - Related/Non-cognate")))
 
 plot_diffs <- epreds_diff |>
 	ggplot(aes(timebin_std, .epred)) +
@@ -1217,128 +1152,97 @@ plot_diffs <- epreds_diff |>
 			   labeller = labeller(
 			   	diff = label_value,
 			   	lp = \(x) return(""),
-			   	.multi_line = FALSE
-			   )
-	) +
-	annotate(
-		geom = "rect",
-		xmin = -Inf,
-		xmax = Inf,
-		ymin = rope_interval[1],
-		ymax = rope_interval[2],
-		fill = "red",
-		linewidth = 0,
-		alpha = 1 / 3,
-		linetype = "dotted"
-	) +
-	stat_summary(
-		fun.data = tidybayes::mean_qi,
-		geom = "ribbon",
-		fill = "grey",
-		linewidth = NA,
-		alpha = 3 / 4
-	) +
-	stat_summary(
-		fun = mean,
-		geom = "line",
-		colour = "black",
-		linewidth = 3 / 4
-	) +
-	# geom_hline(yintercept = rope_interval[1],
-	# 		   colour = "red",
-	# 		   linetype = "dotted") +
-	# geom_hline(yintercept = rope_interval[2],
-	# 		   colour = "red",
-	# 		   linetype = "dotted") +
-	labs(
-		x = "Time (ms)",
-		y = "Logit P(Target looking)",
-		colour = "Comparison",
-		fill = "Comparison",
-		linetype = "Comparison"
-	) +
-	scale_y_continuous(limits = c(-0.25, 0.5))
-
+			   	.multi_line = FALSE)) +
+	annotate(geom = "rect",
+			 xmin = -Inf,
+			 xmax = Inf,
+			 ymin = rope_interval[1],
+			 ymax = rope_interval[2],
+			 fill = "red",
+			 linewidth = 0,
+			 alpha = 1 / 3,
+			 linetype = "dotted") +
+	geom_ribbon(data = diffs_summary,
+				aes(ymin = .lower,
+					ymax = .upper,
+					y = .value),
+				fill = "grey",
+				linewidth = NA,
+				alpha = 3 / 4) +
+	geom_line(data = diffs_summary,
+			  aes(y = .value),
+			  colour = "black",
+			  linewidth = 3 / 4) +
+	geom_point(data = diffs_obs,
+			   shape = 1,
+			   stroke = 1,
+			   size = 2) +
+	labs(x = "Time (ms)",
+		 y = "Logit p(Target looking)",
+		 colour = "Comparison",
+		 fill = "Comparison",
+		 linetype = "Comparison") 
+# scale_y_continuous(limits = c(-0.5, 0.5))
 
 plot_epreds + plot_diffs +
 	plot_layout(ncol = 1) &
 	plot_annotation(tag_levels = "A") &
 	# scale_y_continuous(limits = c(0.25, 0.75)) +
-	scale_x_continuous(
-		breaks = make_std(
-			seq(0, 17, 3),
-			mean(data_bcn$timebin),
-			sd(data_bcn$timebin)
-		),
-		labels = \(x) format(seq(3e2, 2e3, 3e2),
-							 big.mark = ","
-		)
-	) &
-	theme(
-		legend.position = "top",
-		legend.title = element_blank()
-	)
+	scale_x_continuous(breaks = make_std(seq(0, 17, 3),
+										 mean(data_bcn$timebin),
+										 sd(data_bcn$timebin)),
+					   labels = \(x) format(seq(3e2, 2e3, 3e2),
+					   					 big.mark = ",")) &
+	theme(legend.position = "top",
+		  legend.title = element_blank())
 ```
 
 #### Age and vocabulary size effects
 
-A comparison between models including *Age* ($\mathcal{M}_{1}$), *L1 vocabulary* ($\mathcal{M}_{2}$), and *Total vocabulary* ($\mathcal{M}_{3}$) against model $\mathcal{M}_{0}$, which only included *Age* as a main effect is shown in @tbl-loos. Overall, all models performed equivalently, with the model $\mathcal{M}_{2}$ showing slightly better performance. The equivalent performance of all models suggests that participants' target looking during the test phase can be predicted with relative accuracy without taking into account *L1 vocabulary*, or *Total vocabulary* sizes. We now report the median and 95% HDI of the coefficients of $\mathcal{M}_{2}$, the best-fitting model.
+A comparison between models including *Age* ($\mathcal{M}_{1}$), *L1 vocabulary* ($\mathcal{M}_{2}$), and *Total vocabulary* ($\mathcal{M}_{3}$) against model $\mathcal{M}_{0}$, which only included *Age* as a main effect is shown in @tbl-loos-bcn. Overall, all models performed equivalently, with the model $\mathcal{M}_{2}$ showing slightly better performance. The equivalent performance of all models suggests that participants' target looking during the test phase can be predicted with relative accuracy without taking into account *L1 vocabulary*, or *Total vocabulary* sizes. We now report the median and 95% HDI of the coefficients of $\mathcal{M}_{2}$, the best-fitting model.
 
-\newpage
-
-\blandscape
-
-```{r tbl-loos}
-#| label: tbl-loos
-#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 2. *ELPD*: sum of expected log pointwise predictive density for a new data set. *SE \\(ELPD\\)*: standard error of the *ELPD*, which indictes the uncertainty about the predictive performance for unknown future data. *ELPD (diff)*: pairwise difference in *ELPD* for two models. The difference is computed relative to the model with lowest *ELPD* (best fitting model). *SE ELPD (diff)*: standard error of component-wise differences of *ELPD* between two models."
-get_loos <- function(x, y) {
-	out <- lst(m_0 = x, m_1 = y) |>
-		brms::loo_compare() |>
-		as.data.frame() |>
-		tibble::rownames_to_column("model") |>
-		arrange(model) |>
-		select(model, elpd_diff, se_diff) |>
-		mutate(
-			diff_label = sprintf("%.3f", elpd_diff),
-			se_label = sprintf("%.3f", se_diff)
-		)
-	return(out)
-}
-
-brms::loo_compare(model_loos_bcn) |>
+```{r tbl-loos-bcn}
+#| label: tbl-loos-bcn
+#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. $\\Delta ELDP$: pairwise difference in $ELPD$ for two models. The difference is computed relative to the model with lowest $ELPD$ (best fitting model). $\\Delta ELDP_{SE}$: standard error of component-wise differences of *ELPD* between two models. $ELDP$: sum of expected log pointwise predictive density for a new data set. $ELDP_{SE}$: standard error of the $ELPD$, which indictes the uncertainty about the predictive performance for unknown future data." 
+tbl_data <- brms::loo_compare(model_loos_oxf) |>
 	as.data.frame() |>
 	tibble::rownames_to_column("model") |>
-	mutate(
-		model = paste0("Model ", as.numeric(gsub("fit_", "", model))),
-		across(
-			matches("diff"),
-			\(x) {
-				x[1] <- NA
-				return(x)
-			}
+	mutate(model = paste0(
+		"Model ",
+		as.numeric(gsub("fit_oxf_", "", model))),
+		across(matches("diff"),
+			   \(x) {
+			   	x[1] <- NA
+			   	return(x)
+			   }),
+		# across(where(is.numeric), \(x) format(x, big.mark = ",")),
+		preds = case_when(
+			model=="Model 0" ~ "$\\text{Age} + \\text{Condition}$",
+			model=="Model 1" ~ "$\\text{Age} \\times \\text{Condition}$",
+			model=="Model 2" ~ "$\\text{Vocabulary} \\times \\text{Condition}$"
 		),
 		model = case_when(
-			model == "Model 1" ~ "Model 0 (Age as main effect)",
-			model == "Model 2" ~ "Model 1 (Age-by-condition)",
-			model == "Model 3" ~ "Model 3 (Vocabulary-by-condition)",
-			.default = model
-		)
+			model=="Model 0" ~ "$\\mathcal{M}_0$",
+			model=="Model 1" ~ "$\\mathcal{M}_1$",
+			model=="Model 2" ~ "$\\mathcal{M}_2$",
+			.default = model),
 	) |>
-	select(model, matches("elpd|diff")) |>
-	relocate(matches("diff"), .after = matches("loo")) |>
-	gt(rowname_col = "model") |>
-	fmt_number(is.numeric) |>
-	cols_label(
-		elpd_diff = "ELPD (diff)",
-		se_diff = "SE ELPD (diff)",
-		elpd_loo = "ELPD",
-		se_elpd_loo = "SE ELPD"
-	) |>
-	fmt_missing(missing_text = "---") |>
-	tab_style(cell_text(style = "italic"), cells_column_labels())
-```
+	select(model, preds, matches("elpd|diff")) |>
+	relocate(matches("diff"), .after = matches("loo")) 
 
-\elandscape
+kable(tbl_data,
+	  format.args = list(big.mark = ","), 
+	  format = "latex",
+	  digits = 2,
+	  booktabs = TRUE,
+	  escape = FALSE,
+	  col.names = c(" ", "Predictors",
+	  			  "$ELDP$", 
+	  			  "$ELDP_{SE}$",
+	  			  "$\\Delta ELDP$", 
+	  			  "$\\Delta ELDP_{SE}$"),
+	  align = "lrrrrr") 
+```
 
 ### Discussion
 
@@ -1484,27 +1388,33 @@ mp |>
 
 A difference in the difficulty of the stimuli might have influenced the results in the present study, compared to those of the original studies. When designing the stimuli lists, we considered three variables as indices of word difficult during recognition: lexical frequency, age of acquisition, and number of phonemes. The distribution of the three variables was equivalent across the three experimental conditions (see @tbl-stimuli), so it is unlikely that such differences cancelled out a possible priming effect. However, the stricter limitations under which we build the stimuli lists, might have lead to out stimuli lists including more difficult words than in the original study by @mani2010infant. We examined this possibility by comparing the distributions of the English words included in Study 1, with those included in @mani2010infant and @mani2011phonological (stimuli lists are identical in both studies). @fig-mp shows a comparison between the stimuli lists of the three studies in lexical frequency and word familiarity at 18 months. Overall, words included in Mani and Plunkett and in Study 1 have equivalent lexical frequency, and are know by a similar proportion of English monolinguals infants, according to the OCDI norms. This is the case for prime and target words across the related and the unrelated conditions. It is therefore unlikely that the lack of priming effects in Study 1 is due to an increased difficulty in the items included.
 
-```{r}
+```{r discussion-oxf-vocab}
 oxf_vocab <- vocabulary |>
-	inner_join(
-		dplyr::filter(
-			attrition_participants,
-			is_valid_participant
-		),
-		by = join_by(session_id)
-	) |>
+	inner_join(dplyr::filter(
+		attrition_participants,
+		is_valid_participant),
+		by = join_by(session_id)) |>
 	inner_join(participants,
-			   by = join_by(child_id, session_id, vocab_id)
-	) |>
+			   by = join_by(child_id, session_id, vocab_id)) |>
 	dplyr::filter(test_language == "English") |>
-	summarise(
-		l1_count_sd = sd(l1_count),
-		l1_count = mean(l1_count),
-		.by = age_group
-	) |>
+	summarise(l1_count_sd = sd(l1_count),
+			  l1_count = mean(l1_count),
+			  .by = age_group) |>
 	arrange(age_group)
 ```
 
 Another possibility is that participants in the present study had smaller vocabulary sizes than those of participants in the original studies. This hypothesis is not easy to investigate, as quantitative vocabulary sizes were not reported in original studies. A more recent study by @avila2021longitudinal, in which phonological priming effects were found associated to participants vocabulary size, did provide summary statistics for participants vocabulary size scores. This study tested a cohort of monolingual German infants in a word recognition task, in which participants in which participants were presented with auditory primes and targets, which were phonologically related or unrelated.   The authors estimated participants' receptive vocabulary sizes using the *Fragebogen zur frühkindlichen Sprachentwicklung* [@szagun2009fragebogen], an adaptation of the CDI to German. Their cohort of participants showed receptive vocabulary sizes larger than those of participants in the present study. Participants in @avila2021longitudinal knew an average of 405.24 (*SD* = 96.29) at 21 months and 501.97	(*SD* = 73.41) at 24 months, which contrast with receptive vocabulary sizes of participants in Study 1: `r round(oxf_vocab$l1_count[1], 2)` at 21 months (*SD* = `r round(oxf_vocab$l1_count_sd[1], 2)`), and `r round(oxf_vocab$l1_count[2], 2)` (*SD* = `r round(oxf_vocab$l1_count_sd[2], 2)`) at 25 months.
 
 In summary, we aimed to test the language non-selective hypothesis of lexical access in bilingual toddlers using an adaptation of the implicit naming paradigm. This adaptation involved target auditory labels immediately after the offset of prime pictures, instead of presenting the target labels after a baseline period of 2,000 after the offset of the prime pictures. In Study 1, we tested English monolinguals (same population as in the original studies) to establish a baseline to later test bilingual participants. We attempted to replicate the previously reported within-language phonological priming effect. We did not find evidence of such effect, suggesting that our modification of the original task was unsuccessful. Because data collection was conducted simultaneously for Studies 1 and 2, data in Catalan-Spanish monolinguals and bilinguals was available despite the failed replication in Study 1. In Study 2, we also found null pattern of results, in which neither monolinguals nor bilinguals showed evidence of within- or cross-language priming effects. Overall, our results suggest that the change in the timing of the trial disrupted the dynamics of word recognition in such way that priming effects were no longer detectable in our adaptation of the paradigm.
+
+## Appendix D: Imputing vocabulary sizes
+
+{{< include ../_appendix/_chapter-3_vocabulary-validity.qmd >}}
+
+{{< pagebreak >}}
+
+## Appendix E: Concurrent validity of comprehension estimates
+
+{{< include ../_appendix/_chapter-3_vocabulary-imputation.qmd >}}
+
+{{< pagebreak >}}
