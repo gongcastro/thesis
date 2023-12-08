@@ -45,8 +45,8 @@ format:
         \usepackage{lscape}
         \newcommand{\blandscape}{\begin{landscape}}
         \newcommand{\elandscape}{\end{landscape}}
-  odt: default
-  upfthesis-docx: default
+  #odt: default
+  #upfthesis-docx: default
 
 fig-dpi: 500
 fig-align: center
