@@ -45,6 +45,7 @@ format:
         \usepackage{lscape}
         \newcommand{\blandscape}{\begin{landscape}}
         \newcommand{\elandscape}{\end{landscape}}
+  odt: default
   upfthesis-docx: default
 
 fig-dpi: 500
