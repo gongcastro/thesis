@@ -742,7 +742,7 @@ To test our hypotheses regarding the role of age and vocabulary size on the emer
 
 ```{r tbl-loos-oxf}
 #| label: tbl-loos-oxf
-#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. $\\Delta ELDP$: pairwise difference in $ELPD$ for two models. The difference is computed relative to the model with lowest $ELPD$ (best fitting model). $\\Delta ELDP_{SE}$: standard error of component-wise differences of *ELPD* between two models. $ELDP$: sum of expected log pointwise predictive density for a new data set. $ELDP_{SE}$: standard error of the $ELPD$, which indictes the uncertainty about the predictive performance for unknown future data." 
+#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. $ELDP$: sum of expected log pointwise predictive density for a new data set. $ELDP_{SE}$: standard error of the $ELPD$, which indictes the uncertainty about the predictive performance for unknown future data. $\\Delta$: pairwise difference in $ELPD$ for two models. The difference is computed relative to the model with lowest $ELPD$ (best fitting model). $\\Delta_{SE}$: standard error of component-wise differences of *ELPD* between two models." 
 tbl_data <- brms::loo_compare(model_loos_oxf) |>
 	as.data.frame() |>
 	tibble::rownames_to_column("model") |>
@@ -777,8 +777,8 @@ kable(tbl_data,
 	  col.names = c(" ", "Predictors",
 	  			  "$ELDP$", 
 	  			  "$ELDP_{SE}$",
-	  			  "$\\Delta ELDP$", 
-	  			  "$\\Delta ELDP_{SE}$"),
+	  			  "$\\Delta$", 
+	  			  "$\\Delta_{SE}$"),
 	  align = "lrrrrr") 
 ```
 
@@ -896,9 +896,9 @@ n_items <- bvq_data$pool |>
 n_categories <- n_distinct(bvq_data$pool$semantic_category)
 ```
 
-We collected vocabulary data using parental responses to the Barcelona Vocabulary Questionnaire [BVQ, @garcia-castro2023bvq], an online vocabulary checklist developed to assess the vocabulary size of Catalan-Spanish bilingual toddlers, and inspired in several adaptations of the the Communicative Developmental Inventory [CDI, @fenson1994variability]. This questionnaire has four versions, each including a different but overlapping subset of words, from a total pool of `r n_pool` words from `r n_categories` functional-semantic categories. Each version included a Catalan and a Spanish vocabulary checklist. Catalan checklists contained between `r n_items$min[1]` and `r n_items$min[2]` words, and Spanish checklists contained between `r n_items$min[2]` and `r n_items$min[2]` words (see the Methods section of Chapter 1 for a detailed description of the questionnaire. Participants were randomly allocated to one of the four versions. Recurrent participants were always allocated to the same version. Families received a link to the BVQ immediately after each experimental session, and were given two weeks to fill it.
+We collected vocabulary data using parental responses to the Barcelona Vocabulary Questionnaire [BVQ, @garcia-castro2023bvq], an online vocabulary checklist developed to assess the vocabulary size of Catalan-Spanish bilingual toddlers, and inspired in several adaptations of the the Communicative Developmental Inventory [CDI, @fenson1994variability]. This questionnaire has four versions, each including a different but overlapping subset of words, from a total pool of `r n_pool` words from `r n_categories` functional-semantic categories. Each version included a Catalan and a Spanish vocabulary checklist. Catalan checklists contained between `r n_items$min[1]` and `r n_items$min[2]` words, and Spanish checklists contained between `r n_items$min[2]` and `r n_items$min[2]` words (see the Methods section of Chapter 1 for a detailed description of the questionnaire). Participants were randomly allocated to one of the four versions. Recurrent participants were always allocated to the same version. Families received a link to the BVQ immediately after each experimental session, and were given two weeks to fill it. It is common for children living in the Metropolitan area of Barcelona to be exposed to both Catalan and Spanish in some degree, even monolinguals. For this reason, we collected Catalan *and* Spanish vocabulary data from all participants in Study 2, but for consistency with Study 1, we calculated vocabulary sizes for participants in Study 2 as the number of words that caregivers reported their child to *understand* or *understand and say* only in the dominant language of the child (i.e., the language of test).
 
-Following the same procedure as in Study 1, we calculated participants' vocabulary size as the number of words that caregivers reported their child to *understand* or *understand and say* in the dominant language of the child (i.e., the language of test). `r english::Words(n_imputed)` (`r prop_imputed`) families failed to provide a complete response to the vocabulary checklist within the two-week time limit. We imputed missing vocabulary size scores using single imputation, taking the vocabulary size scores of a pool of `r n_pool` additional participants for which a successful response for the questionnaire had been gathered. We used participants' age in months and their language profile (monolingual or bilingual) as predictors. We used the `mice` R package [@van2011mice] to perform imputation using the Bayesian linear regression method (see Appendix B).
+`r english::Words(n_imputed)` (`r prop_imputed`) families failed to provide a complete response to the vocabulary checklist within the two-week time limit. We imputed missing vocabulary size scores using single imputation, taking the vocabulary size scores of a pool of `r n_pool` additional participants for which a successful response for the questionnaire had been gathered. We used participants' age in months and their language profile (monolingual or bilingual) as predictors. We used the `mice` R package [@van2011mice] to perform imputation using the Bayesian linear regression method (see Appendix B).
 
 ```{r fig-vocabulary}
 #| label: fig-vocabulary-bcn
@@ -1203,7 +1203,7 @@ A comparison between models including *Age* ($\mathcal{M}_{1}$), *L1 vocabulary*
 
 ```{r tbl-loos-bcn}
 #| label: tbl-loos-bcn
-#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. $\\Delta ELDP$: pairwise difference in $ELPD$ for two models. The difference is computed relative to the model with lowest $ELPD$ (best fitting model). $\\Delta ELDP_{SE}$: standard error of component-wise differences of *ELPD* between two models. $ELDP$: sum of expected log pointwise predictive density for a new data set. $ELDP_{SE}$: standard error of the $ELPD$, which indictes the uncertainty about the predictive performance for unknown future data." 
+#| tbl-cap: "Leave-one-out cross validation outcomes, comparing the predictive performance of the models in Study 1. $ELDP$: sum of expected log pointwise predictive density for a new data set. $ELDP_{SE}$: standard error of the $ELPD$, which indictes the uncertainty about the predictive performance for unknown future data. $\\Delta$: pairwise difference in $ELPD$ for two models. The difference is computed relative to the model with lowest $ELPD$ (best fitting model). $\\Delta_{SE}$: standard error of component-wise differences of *ELPD* between two models." 
 tbl_data <- brms::loo_compare(model_loos_oxf) |>
 	as.data.frame() |>
 	tibble::rownames_to_column("model") |>
@@ -1239,8 +1239,8 @@ kable(tbl_data,
 	  col.names = c(" ", "Predictors",
 	  			  "$ELDP$", 
 	  			  "$ELDP_{SE}$",
-	  			  "$\\Delta ELDP$", 
-	  			  "$\\Delta ELDP_{SE}$"),
+	  			  "$\\Delta$", 
+	  			  "$\\Delta_{SE}$"),
 	  align = "lrrrrr") 
 ```
 
@@ -1273,6 +1273,8 @@ We consider three scenarios under which implicit naming might have occurred in t
 A second possibility is that participants successfully retrieved a detailed phonological form of the prime labels, but such forms failed to interact with target recognition. This would be explained by the lack of strong associations between phonologically related lexical representations at these ages. But even if one considers the possibility that participants in Study 1 failed to show priming effects for this reason (for instance, the emergence of phonological associations might follow different trajectories in Catalan-Spanish infants, compared to English infants), the fact that English monolingual infants in Study 2 failed to show such priming effects contradicts previous findings on the same population, reporting priming phonological priming effects in even younger infants [@mani2010infant; @mani2011phonological].
 
 Third, and most likely, the modifications of the implicit naming task in the present investigation might have reduced the chances of detecting the anticipated effects. The most critical difference between the original design of the implicit naming task by Mani and Plunkett and that of the present study is the absence of a pre-naming phase during the test phase. Target auditory labels were presented immediately after the offset of the prime picture. It is possible that such time interval was too short for participants to retrieve the phonological label of the prime picture before the target was presented. Such failure to generate phonological word-forms for prime labels would have prevented participants in Studies 1 and 2 from being affected by phonological priming effects during target word recognition.
+
+A difference in the difficulty of the stimuli might have influenced the results in the present study, compared to those of the original studies. When designing the stimuli lists, we considered three variables as indices of word difficult during recognition: lexical frequency, age of acquisition, and number of phonemes. The distribution of the three variables was equivalent across the three experimental conditions (see @tbl-stimuli), so it is unlikely that such differences cancelled out a possible priming effect. However, the stricter limitations under which we build the stimuli lists, might have lead to out stimuli lists including more difficult words than in the original study by @mani2010infant. We examined this possibility by comparing the distributions of the English words included in Study 1, with those included in @mani2010infant and @mani2011phonological (stimuli lists are identical in both studies). @fig-mp shows a comparison between the stimuli lists of the three studies in lexical frequency and word familiarity at 18 months. Overall, words included in Mani and Plunkett and in Study 1 have equivalent lexical frequency, and are know by a similar proportion of English monolinguals infants, according to the OCDI norms. This is the case for prime and target words across the related and the unrelated conditions. It is therefore unlikely that the lack of priming effects in Study 1 is due to an increased difficulty in the items included.
 
 ```{r fig-mp}
 #| label: fig-mp
@@ -1386,7 +1388,6 @@ mp |>
 	)
 ```
 
-A difference in the difficulty of the stimuli might have influenced the results in the present study, compared to those of the original studies. When designing the stimuli lists, we considered three variables as indices of word difficult during recognition: lexical frequency, age of acquisition, and number of phonemes. The distribution of the three variables was equivalent across the three experimental conditions (see @tbl-stimuli), so it is unlikely that such differences cancelled out a possible priming effect. However, the stricter limitations under which we build the stimuli lists, might have lead to out stimuli lists including more difficult words than in the original study by @mani2010infant. We examined this possibility by comparing the distributions of the English words included in Study 1, with those included in @mani2010infant and @mani2011phonological (stimuli lists are identical in both studies). @fig-mp shows a comparison between the stimuli lists of the three studies in lexical frequency and word familiarity at 18 months. Overall, words included in Mani and Plunkett and in Study 1 have equivalent lexical frequency, and are know by a similar proportion of English monolinguals infants, according to the OCDI norms. This is the case for prime and target words across the related and the unrelated conditions. It is therefore unlikely that the lack of priming effects in Study 1 is due to an increased difficulty in the items included.
 
 ```{r discussion-oxf-vocab}
 oxf_vocab <- vocabulary |>
