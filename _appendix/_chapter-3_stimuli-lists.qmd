@@ -1,0 +1,75 @@
+```{r setup}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+# load objects -----------------------------------------------------------------
+library(knitr)
+library(kableExtra)
+library(here)
+library(readr)
+library(dplyr)
+library(tidyr)
+
+options(readr.show_progress = FALSE,
+        readr.show_col_types = FALSE)
+stimuli <- read_csv(here("data", "03-chapter-3",
+                         "data", "stimuli.csv"))
+```
+
+\begingroup
+\renewcommand{\arraystretch}{0.8pt}
+
+```{r tbl-stimuli-list}
+#| label: tbl-stimuli-list
+#| tbl-cap: "Stimuli lists for each language. The condition to which the prime belonged is indicated between parentheses. *R/C*: Related/Cognate, *R/N*: Related/Non-cognate, *U*: Unrelated."
+tbl_data <- stimuli |>
+  distinct(test_language, target, distractor,
+           prime, trial_type, list) |>
+  rowwise() |>
+  mutate(td = paste0(c(target, distractor), collapse = "-")) |> 
+  mutate(td_pair = paste0(sort(c(target, distractor)), collapse = "-")) |> 
+  ungroup() |> 
+  mutate(td_pair = as.numeric(as.factor(td_pair)),
+         .by = test_language) |> 
+  mutate(id = 1:n(), .by = c(test_language, td_pair)) |>
+  mutate(id = 1:n(), .by = c(test_language)) |>
+  mutate(condition = case_when(trial_type=="Cognate" ~ "R/C",
+                               trial_type=="Non-cognate" ~ "R/N",
+                               trial_type=="Unrelated" ~ "U"),
+         prime = paste0(prime, " (", condition, ")"),
+         test_language = factor(test_language,
+                                levels = c("English",
+                                           "Catalan",
+                                           "Spanish"))) |> 
+  pivot_wider(id_cols = c(id, test_language, td_pair, td), 
+              names_from = c(list),
+              values_from = c(prime),
+              names_prefix = "list_") |> 
+  arrange(test_language, td_pair, td) |> 
+  summarise(across(list_1:list_4,
+                   \(x) first(x, na_rm = TRUE)),
+            .by = c(test_language, td_pair,  td)) |> 
+  ungroup() 
+
+tbl_data |> 
+  select(-test_language) |> 
+  kableExtra::kbl(col.names = c(" ", "Target-Distractor",
+                                "1", "2", "3", "4"), 
+                  booktabs = TRUE,
+                  longtable = TRUE,
+                  format = "latex",
+                  align = "llcccc",
+                  row.names = FALSE) |> 
+  pack_rows("English", 1, 32) |>
+  pack_rows("Catalan", 33, 64) |>
+  pack_rows("Spanish", 65, 96) |> 
+  add_header_above(c(" " = 2, "List" = 4)) |> 
+  column_spec(1, bold = TRUE, color = "white") |> 
+  collapse_rows(1,
+                # row_group_label_position = "stack",
+                col_names = FALSE,
+                longtable_clean_cut = FALSE)  
+  # kable_styling(latex_options = c("repeat_header"))
+```
+\endgroup
