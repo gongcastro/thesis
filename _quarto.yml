@@ -77,8 +77,5 @@ freeze: auto
 
 csl: "_assets/apa7.csl"
 bibliography:
-  - "_assets/refs-introduction.bib"
-  - "_assets/refs-chapter-2.bib"
-  - "_assets/refs-chapter-3.bib"
-  - "_assets/refs-discussion.bib"
+  - "_assets/references.bib"
   

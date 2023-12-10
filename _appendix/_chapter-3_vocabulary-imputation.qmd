@@ -13,7 +13,7 @@ attrition_participants <- read_csv(here("data", "03-chapter-3", "data", "attriti
 bvq_data <- readRDS(here("data", "03-chapter-3", "data-raw", "bvq.rds"))
 ```
 
-Given the large number of participants in Study 2 whose families failed to fill in the vocabulary questionnaire in time, we imputed missing vocabulary sizes to avoid losing their data in subsequent analyses. We used the `mice` R package [@buuren2011mice] to perform single imputations via Bayesian linear regression. @fig-vocabulary-imputation shows the distribution of observed and imputed vocabulary sizes. Overall, the distribution of imputed vocabulary sizes was equivalent to the distribution of observed vocabulary sizes of participants with similar age and language profile.
+Given the large number of participants in Study 2 whose families failed to fill in the vocabulary questionnaire in time, we imputed missing vocabulary sizes to avoid losing their data in subsequent analyses. We used the `mice` R package [@vanbuuren2011mice] to perform single imputations via Bayesian linear regression. @fig-vocabulary-imputation shows the distribution of observed and imputed vocabulary sizes. Overall, the distribution of imputed vocabulary sizes was equivalent to the distribution of observed vocabulary sizes of participants with similar age and language profile.
 
 ```{r fig-vocabulary-imputation}
 #| label: fig-vocabulary-imputation
