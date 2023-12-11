@@ -41,7 +41,8 @@ As a robustness check, we fit a model similar to the one described in the main m
 \newpage
 
 \blandscape
-
+\begingroup
+\small
 ```{r tbl-coefs-doe}
 #| label: tbl-coefs-doe
 #| tbl-cap: "Posterior distribution of regression coefficients of the model including the *Exposure* composite predictor, and of the model including lexical frequency (*Frequency*) and degree of exposure (*DoE*) separately. $\\beta$: median of the posterior distribution in the probability scale. 95\\% HDI: 95\\% highest density interval of the distribution. $p(\\text{ROPE})$: overlap between the 95\\% HDI and the ROPE, indicating the posterior probability that the true value of the coefficient is equivalent to zero."
@@ -87,5 +88,5 @@ tbl_data |>
 						  start_row = 9,
 						  end_row = 17) 
 ```
-
+\endgroup
 \elandscape

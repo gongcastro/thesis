@@ -17,7 +17,7 @@ Given the large number of participants in Study 2 whose families failed to fill 
 
 ```{r fig-vocabulary-imputation}
 #| label: fig-vocabulary-imputation
-#| fig-cap: "Imputation of missing receptive vocabulary size scores in Study 2 for monolinguals (A) and bilinguals (B). vocabulary size scores are epxressed in raw counts, that is, the number of words reported by caregivers as acquired. Vocabulary sizes were imputed from a larger sample of children who provided responses to the Barcelona Vocabulary Questionnaire. We used participants' age and language profile to impute scores of participants wih the same profile. Imputed observations are highlighted in red (monolinguals) and blue (bilinguals)"
+#| fig-cap: "Imputation of missing receptive vocabulary size scores in Study 2 for monolinguals (A) and bilinguals (B). Imputed vocabulary size scores are presented in red and blue. Observed vocabulary sizes in the database are presented in grey. Vocabulary size scores are expressed in raw counts, that is, the number of words reported by caregivers as acquired. Vocabulary sizes were imputed from a larger sample of children who provided responses to the Barcelona Vocabulary Questionnaire. We used participants' age and language profile to impute scores of participants wih the same profile. Imputed observations are highlighted in red (monolinguals) and blue (bilinguals)"
 #| fig-height: 6
 #| fig-width: 6
 vocabulary_tmp <- vocabulary |>

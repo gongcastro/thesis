@@ -102,7 +102,7 @@ To test these predictions, we collected vocabulary data on production and compre
 
 ## Methods {#sec-methods}
 
-All materials, data, and reproducible code can be found at the OSF (<https://osf.io/hy984/>) and GitHub (<https://github.com/gongcastro/cognate-beginnings>) repositories. For reproducibility, a Docker image of the RStudio session is available on DockerHub(<https://hub.docker.com/repository/docker/gongcastro/cognate-beginnings/>). This study was conducted according to guidelines laid down in the Declaration of Helsinki, and was approved by the Drug Research Ethical Committee (CEIm) of the IMIM Parc de Salut Mar, reference 2020/9080/I.
+All materials, data, and reproducible code can be found at the OSF (<https://osf.io/hy984/>) and GitHub (<https://github.com/gongcastro/cognate-beginnings>) repositories. For reproducibility, a Docker image of the RStudio session is available on DockerHub (<https://hub.docker.com/repository/docker/gongcastro/cognate-beginnings/>). This study was conducted according to guidelines laid down in the Declaration of Helsinki, and was approved by the Drug Research Ethical Committee (CEIm) of the IMIM Parc de Salut Mar, reference 2020/9080/I.
 
 ### Questionnaire {#sec-questionnaire}
 
@@ -134,7 +134,7 @@ n_items_version <- bvq_data$pool |>
 	mutate(version = tolower(version))
 ```
 
-To collect vocabulary data from participants, we created an ad hoc questionnaire: the Barcelona Vocabulary Questionnaire (BVQ) [@garcia-castro2023bvq]. This questionnaire was inspired by the MacArthur-Bates Communicative Development Inventory [@fenson2007macarthurbates] and its adaptations to other languages, and was implemented on-line using the `formr` platform [@arslan2020formr]. This questionnaire is structured in three blocks: (1) a language exposure questionnaire, (2) a demographic survey, and (3) two vocabulary checklists. Vocabulary checklists followed a similar structure as the Oxford Communicative Developmental Inventory [@hamilton2000infant] and consisted of two lists of words, one in Catalan and one in Spanish. Both lists included items from a diverse sample of `r n_categories` semantic or functional categories. The Catalan checklist contained `r n_item_language["catalan"]` items and the Spanish checklist contained `r n_item_language["spanish"]`. Items in one language were translation equivalents of the items in the other language (e.g., the same participant responded to both *gos* and *perro*, Catalan and Spanish for dog), roughly following a one-to-one mapping. Some of the words in Catalan did not have a clear translation or had more than one possible translation in Spanish, and vice versa, therefore the unequal number of words included in the two lists.
+To collect vocabulary data from participants, we created an *ad hoc* questionnaire: the Barcelona Vocabulary Questionnaire (BVQ) [@garcia-castro2023bvq]. This questionnaire was inspired by the MacArthur-Bates Communicative Development Inventory [@fenson2007macarthurbates] and its adaptations to other languages, and was implemented on-line using the `formr` platform [@arslan2020formr]. This questionnaire is structured in three blocks: (1) a language exposure questionnaire, (2) a demographic survey, and (3) two vocabulary checklists. Vocabulary checklists followed a similar structure as the Oxford Communicative Developmental Inventory [@hamilton2000infant] and consisted of two lists of words, one in Catalan and one in Spanish. Both lists included items from a diverse sample of `r n_categories` semantic or functional categories. The Catalan checklist contained `r n_item_language["catalan"]` items and the Spanish checklist contained `r n_item_language["spanish"]`. Items in one language were translation equivalents of the items in the other language (e.g., the same participant responded to both *gos* and *perro*, Catalan and Spanish for dog), roughly following a one-to-one mapping. Some of the words in Catalan did not have a clear translation or had more than one possible translation in Spanish, and vice versa, therefore the unequal number of words included in the two lists.
 
 \newpage
 
@@ -392,11 +392,13 @@ We collected data for `r format(nrow(n_items), big.mark = ",")` words. We restri
 
 #### Modelling approach
 
-We modelled the probability of participants answering each response category (*No* \< *Understands* \< *Understands and Says*) using a Bayesian, multilevel, ordinal regression model. This model allowed us to estimate both item and participant word-acquisition trajectories, while estimating the effect of our variables of interest: *Age* (number of months elapsed between participants' birth date and questionnaire completion), *Length* (number of phonemes in the X-SAMPA phonological transcription of the word-form), *Exposure* (a language exposure-weighted lexical frequency score), and *Cognateness* (defined as the phonological similarity between translation equivalents). A more detailed descriptions of these predictors is provided in the Model predictors section. We added these variables as main effects, together with the two-way and three-way interactions between *Age*, *Exposure*, and *Cognateness*. Participant-level and item-level random intercepts and slopes were included where appropriate, according to the structure of the data [@barr2013random]. We specified a weakly informative prior around the parameters of the model. @eq-model shows a detailed description of the model. See Appendix A for a detailed description of the model and its diagnostics.
+We modelled the probability of participants answering each response category (*No* \< *Understands* \< *Understands and Says*) using a Bayesian, multilevel, ordinal regression model. This model allowed us to estimate both item and participant word-acquisition trajectories, while estimating the effect of our variables of interest: *Age* (number of months elapsed between participants' birth date and questionnaire completion), *Length* (number of phonemes in the X-SAMPA phonological transcription of the word-form), *Exposure* (a language exposure-weighted lexical frequency score), and *Cognateness* (defined as the phonological similarity between translation equivalents). A more detailed descriptions of these predictors is provided in @sec-predictors-2. We added these variables as main effects, together with the two-way and three-way interactions between *Age*, *Exposure*, and *Cognateness*. Participant-level and item-level random intercepts and slopes were included where appropriate, according to the structure of the data [@barr2013random]. We specified a weakly informative prior around the parameters of the model. @eq-model shows a detailed description of the model. See @sec-appendix-a for a detailed description of the model and its diagnostics.
 
 We implemented the model using `brms` [@burkner2017brms], an R interface to the Stan probabilistic language (`r stan_version`) [@carpenter2017stan]. We ran `r english::words(dim(model_fit$fit)[2])` iteration chains using the by-default No U-Turn Sampler algorithm with `r format(brms::niterations(model_fit), big.mark = ",")` iterations each and an additional `r format(brms::niterations(model_fit), big.mark = ",")` warm-up iterations per chain.
 
-
+\begingroup
+\setstretch{1.0}
+\small
 $$
 \begin{aligned}
 &\textbf{Response}~(k)~\textbf{to word}~i~ \textbf{by participant}~j \\
@@ -422,16 +424,40 @@ $$
 & \rho_{u_{0-8}, w_{0-3}}~\text{are the correlations between random effects in }u\text{ and }w\\
 \end{aligned}
 $$ {#eq-model}
+\endgroup
 
-#### Model predictors {#sec-predictors}
+#### Model predictors {#sec-predictors-2}
 
-We developed the Exposure predictor to account for the fact that bilinguals' exposure to a given word-form is not only a function of the word-form's lexical frequency, but also of the quantitative input they receive from the language such word-form belongs to. We expressed lexical frequencies as the product between both variables. First, we extracted the child-directed lexical frequency of each word-form from the CHILDES database [@macwhinney2000childes; @sanchez2019childesdb]. Using the corresponding lexical frequencies directly from Catalan and Spanish was not possible due to the low number of Catalan participants and tokens available in their corresponding CHILDES corpora, so they were extracted from the English corpora instead. We mapped the lexical frequencies of the English words to their Catalan and Spanish translations [see @fourtassi2020growth for a similar approach], and transformed them to Zipf scores [@vanheuven2014subtlexuk; @zipf1945meaningfrequency]. We multiplied the resulting lexical frequencies by the reported degree of exposure of the child to Catalan or Spanish. For instance, for a child whose degree of exposure is 80% for Catalan and 20% for Spanish, the expected Exposure score to the Catalan word-form *cotxe* [car]---with a lexical frequency of `r round(items$freq[items$item=="cotxe"], 2)`---would be `r round(items$freq[items$item=="cotxe"]*0.80, 2)`, while that of its translation to Spanish *coche* would be `r round(items$freq[items$item=="coche"]*0.20, 2)`.
+We developed the Exposure predictor to account for the fact that bilinguals' exposure to a given word-form is not only a function of the word-form's lexical frequency, but also of the quantitative input they receive from the language such word-form belongs to. We expressed lexical frequencies as the product between both variables. First, we extracted the child-directed lexical frequency of each word-form from the CHILDES database [@macwhinney2000childes; @sanchez2019childesdb]. Using the corresponding lexical frequencies directly from Catalan and Spanish was not possible due to the low number of Catalan participants and tokens available in their corresponding CHILDES corpora, so they were extracted from the English corpora instead. We mapped the lexical frequencies of the English words to their Catalan and Spanish translations [see @fourtassi2020growth for a similar approach], and transformed them to Zipf scores [@vanheuven2014subtlexuk; @zipf1945meaningfrequency]. We multiplied the resulting lexical frequencies by the reported degree of exposure of the child to Catalan or Spanish. For instance, for a child whose degree of exposure is 80% for Catalan and 20% for Spanish, the expected *Exposure* score to the Catalan word-form *cotxe* [car]---with a lexical frequency of `r round(items$freq[items$item=="cotxe"], 2)`---would be `r round(items$freq[items$item=="cotxe"]*0.80, 2)`, while that of its translation to Spanish *coche* would be `r round(items$freq[items$item=="coche"]*0.20, 2)`.
 
-Following Floccia et al., we defined Cognateness as the phonological similarity between each word-form and its translation. For each translation equivalent, we used the `stringdist` [@vanderloo2014stringdist] R package to calculate the Levenshtein distance between the Catalan and the Spanish phonological transcriptions of the word-forms. The Levenshtein distance measures the number of editions (insertions, deletions, or substitutions) that one string of characters must go through to become identical to the other [@levenshtein1966binary]. We divided the Levenshtein distance of each translation equivalent by the length of the longest word-form to correct for word-form length (longer strings are likely to show a larger number of mismatches). Finally, we subtracted the result from one so that it could be interpreted in terms of phonological similarity, instead of phonological distance. This led to a distance metric that ranged from zero to one, where zero indicates that both word-forms are completely different (e.g., /\textipa{"taw.l5}/--/\textipa{"me.sa}/, table), and one indicates that the two word-forms are identical (e.g., /\textipa{"mar}/--/\textipa{"mar}/, sea) [@floccia2018introduction; @heeringa2003norwegian; @schepens2012distributions; @fourtassi2020growth]. Predictors were standardised before entering the model by subtracting the mean of the predictor from each value and dividing the result by the standard deviation of the predictor.
+Following Floccia et al., we defined *Cognateness* as the phonological similarity between each word-form and its translation (see @eq-lev). For each translation equivalent, we used the `stringdist` [@vanderloo2014stringdist] R package to calculate the Levenshtein distance between the Catalan and the Spanish phonological transcriptions of the word-forms. The Levenshtein distance measures the number of editions (insertions, deletions, or substitutions) that one string of characters must go through to become identical to the other [@levenshtein1966binary]. We divided the Levenshtein distance of each translation equivalent by the length of the longest word-form to correct for word-form length (longer strings are likely to show a larger number of mismatches). Finally, we subtracted the result from one so that it could be interpreted in terms of phonological similarity, instead of phonological distance. This led to a distance metric that ranged from zero to one, where zero indicates that both word-forms are completely different (e.g., /\textipa{"taw.l5}/--/\textipa{"me.sa}/, table), and one indicates that the two word-forms are identical (e.g., /\textipa{"mar}/--/\textipa{"mar}/, sea) [@floccia2018introduction; @heeringa2003norwegian; @schepens2012distributions; @fourtassi2020growth]. Predictors were standardised before entering the model by subtracting the mean of the predictor from each value and dividing the result by the standard deviation of the predictor.
+
+\begingroup
+\small
+\setstretch{1.0}
+$$
+\begin{aligned}
+\textbf{Measuring } &\textbf{cognateness with the Levenshtein similarity (lev)} \\
+\text{Cognateness}(x, y) &= 1-\frac{\text{lev}(x, y)}{\max{\{i, j}\}} \\
+\text{lev}(x, y) &=  
+\begin{cases}
+\max(i, j) \text{, if} \ \min(i, j)=0\\
+\min \begin{cases}
+\ \text{lev}_{x, y}(i-1, j) + 1 \\
+\ \text{lev}_{x, y}(i, j-1) + 1 \\
+\ \text{lev}_{x, y}(i-1, j-1) + 1_{x_i \neq y_j} \\
+\end{cases}\text{, otherwise}
+\end{cases} \\
+\text{where:} \\
+&x, y: \text{phonological transcriptions of the two word-forms}\\
+&i, j: \text{word length (i.e., number of phonemes) of } x \text{ and } y \\
+\end{aligned}
+$${#eq-lev}
+\endgroup
 
 #### Statistical inference
 
-We assessed the practical relevance of the estimated regression coefficients of the model following @kruschke2018bayesian. First, we specified a region of practical equivalence (ROPE) from `r rope_interval["lower"]` to +`r rope_interval["upper"]`, in the probability scale. This region indicates the range of values that we considered equivalent to zero. We then summarised the posterior distribution of each regression coefficient with the 95% highest density interval (HDI). This interval contains the true value of this coefficient with 95% probability, given the data. Finally, we calculated the proportion of posterior samples in the 95% HDI that fell into the ROPE, noted as $p(\text{ROPE})$, which indicates the probability that the true value of the regression coefficient falls into the ROPE (and therefore should be considered equivalent to zero). For example, $p(\text{ROPE})=.80$ indicates that, given our data, there is a 80% probability that the true value of the coefficient falls within the ROPE, and can therefore be considered equivalent to zero. See Appendix A for considerations about statistical power and sample size.
+We assessed the practical relevance of the estimated regression coefficients of the model following @kruschke2018bayesian. First, we specified a region of practical equivalence (ROPE) from `r rope_interval["lower"]` to +`r rope_interval["upper"]`, in the probability scale. This region indicates the range of values that we considered equivalent to zero. We then summarised the posterior distribution of each regression coefficient with the 95% highest density interval (HDI). This interval contains the true value of this coefficient with 95% probability, given the data. Finally, we calculated the proportion of posterior samples in the 95% HDI that fell into the ROPE, noted as $p(\text{ROPE})$, which indicates the probability that the true value of the regression coefficient falls into the ROPE (and therefore should be considered equivalent to zero). For example, $p(\text{ROPE})=.80$ indicates that, given our data, there is a 80% probability that the true value of the coefficient falls within the ROPE, and can therefore be considered equivalent to zero. See @sec-appendix-a for considerations about statistical power and sample size.
 
 ## Results {#sec-results}
 
@@ -449,11 +475,11 @@ post_draws_list <- model_summary |>
 	split(model_summary$.variable)
 ```
 
-The model posterior showed adequate chain convergence diagnostics and posterior predictive checks (see Appendix A). @tbl-coefs shows the summary of the posterior distribution of the fixed regression coefficients, and their degree of overlap with the ROPE. For interpretability, we report the estimated regression coefficients transformed to the probability scale[^1]. The resulting values correspond to the maximum difference in probability of acquisition (*Comprehension* or *Comprehension and Production*) that corresponds to a one standard deviation change in each predictor.
+The model posterior showed adequate chain convergence diagnostics and posterior predictive checks (see @sec-appendix-a). @tbl-coefs shows the summary of the posterior distribution of the fixed regression coefficients, and their degree of overlap with the ROPE. For interpretability, we report the estimated regression coefficients transformed to the probability scale[^1]. The resulting values correspond to the maximum difference in probability of acquisition (*Comprehension* or *Comprehension and Production*) that corresponds to a one standard deviation change in each predictor.
 
 [^1]: The logit and probability scales relate non-linearly. This means that one logit difference is not necessarily translated to a unique value in the probability scale. For example, the probability of acquisition of a given word might increase in 5% when age increases from 22 to 23 months, the probability of acquisition of the same word might only increase in 0.2% when age increases from 31 to 32 months. The linear growth of the probability of acquisition differs along the logistic curve, and therefore deciding the age point at which to report the estimates of the regression coefficients in the probability scale is not trivial. Following @gelman2020regression, we report the maximum value of such coefficient, which corresponds to the linear growth (i.e., derivative) of the logistic curve at the age at which most participants were acquiring a given word. This value can be approximated by dividing the coefficient in the logit scale by four: $\hat{\beta_j}/4$, where $\hat{\beta_j}$ is the estimated mean of the posterior distribution of coefficient $j$.
 
-We now present our confirmatory analysis, and report a summary of the regression coefficients of interest. @tbl-coefs shows the summary of the posterior distribution of the fixed regression coefficients, and their degree of overlap with the ROPE. For interpretability, we report the estimated regression coefficients transformed to the probability scale. The resulting values correspond to the maximum difference in probability of acquisition (Comprehension or Comprehension and Production) equivalent to a one standard deviation change in each predictor.
+We now present our analysis, and report a summary of the regression coefficients of interest. @tbl-coefs shows the summary of the posterior distribution of the fixed regression coefficients, and their degree of overlap with the ROPE. For interpretability, we report the estimated regression coefficients transformed to the probability scale. The resulting values correspond to the maximum difference in probability of acquisition (Comprehension or Comprehension and Production) equivalent to a one standard deviation change in each predictor.
 
 
 \newpage
@@ -659,7 +685,7 @@ fig_data |>
 
 \elandscape
 
-An additional analysis including lexical frequency and language exposure as separate predictors (instead of the composite Exposure measure) showed equivalent results (see Appendix B). To rule out the possibility that cognateness facilitation effect we found was due to cognateness comprising more frequent syllables than non-cognates---and therefore not because of their cognate status itself---, we compared the syllabic frequency of cognates and non-cognates included in our analyses. To calculate syllable frequency, we first extracted all syllables embedded in the selected words. For each syllable, we summed the lexical frequency of all the words in which such syllable appeared. The resulting value provided an estimate of the number of times the syllable appears in child-directed speech, embedded within different words. Finally, for each word-form, we summed the frequency of its syllables, as an estimate of the syllabic frequency of the word-form. We fit a Bayesian model with Cognateness as response variable, and the main effects of syllable frequency and number of syllables (to control for the fact words with more syllables are more likely to score higher in syllabic frequency) as predictors. This model provided strong evidence for the association between cognateness and syllabic frequency being equivalent to zero (see Appendix C).
+An additional analysis including lexical frequency and language exposure as separate predictors (instead of the composite Exposure measure) showed equivalent results (see @sec-appendix-b). To rule out the possibility that cognateness facilitation effect we found was due to cognateness comprising more frequent syllables than non-cognates---and therefore not because of their cognate status itself---, we compared the syllabic frequency of cognates and non-cognates included in our analyses. To calculate syllable frequency, we first extracted all syllables embedded in the selected words. For each syllable, we summed the lexical frequency of all the words in which such syllable appeared. The resulting value provided an estimate of the number of times the syllable appears in child-directed speech, embedded within different words. Finally, for each word-form, we summed the frequency of its syllables, as an estimate of the syllabic frequency of the word-form. We fit a Bayesian model with Cognateness as response variable, and the main effects of syllable frequency and number of syllables (to control for the fact words with more syllables are more likely to score higher in syllabic frequency) as predictors. This model provided strong evidence for the association between cognateness and syllabic frequency being equivalent to zero (see @sec-appendix-c).
 
 ## Discussion {#sec-discussion2}
 
@@ -731,19 +757,19 @@ The present study contributes with a specific data point to the complex landscap
 
 To conclude, our study provides novel insights about word acquisition in bilingual contexts, and how the presence of cognates in the children's linguistic input impacts the early formation of the lexicon. We found that during the acquisition of low frequency words, bilingual children seem to benefit more strongly from the word-form's phonological similarity with its translation in the other language. Capitalising on the notion of accumulator of linguistic input, we put forward a theoretical account of bilingual word learning, in which cognateness interacts with lexical frequency and language exposure to boost the acquisition of translation equivalents.
 
-## Appendix A: Model details
+## Appendix A: Model details {#sec-appendix-a}
 
 {{< include ../_appendix/_chapter-2_model-details.qmd >}}
 
 {{< pagebreak >}}
 
-## Appendix B: Frequency and language exposure as separate predictors
+## Appendix B: Frequency and language exposure as separate predictors {#sec-appendix-b}
 
 {{< include ../_appendix/_chapter-2_model-doe.qmd >}}
 
 {{< pagebreak >}}
 
-## Appendix C: Syllable frequency
+## Appendix C: Syllable frequency {#sec-appendix-c}
 
 {{< include ../_appendix/_chapter-2_syllable-frequency.qmd >}}
 

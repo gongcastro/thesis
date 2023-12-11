@@ -1,3 +1,6 @@
 make <- function() {
-	quarto::quarto_render()
+  job::job(
+    title = "Render",
+    {{ quarto::quarto_render() }}
+  )
 }
