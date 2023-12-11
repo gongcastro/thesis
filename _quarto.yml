@@ -19,31 +19,31 @@ thesis:
   subtitle: "The Role of Cognates in Word Acquisition"
   author: "Gonzalo García de Castro García"
   date: 2023
-  department: "Department of Experimental and Health Sciences"
-  supervisor: "Dr. Núria Sebastián-Gallés"
+  department: "Departament de Medicina i Ciències de la Vida"
+  supervisor: "Dra. Núria Sebastián-Gallés"
   dedication: |
     A mamá, a papá, a Íñigo.
   acknowledgements: |
     I am not the first to investigate language acquisition. Many have preceded me, and I hope many will follow---perhaps to the surprise of the reader, language acquisition remains unsolved at the conclusion of this research project. Though not the first one, I believe I have reasons to believe I have been the most privileged to do so. My privileges have often taken the form of people, and I want to spend some lines to appreciate their important role in the making if this dissertation.
-    
+
     Aquest camí comença amb la Prof. Núria Sebastian-Galles. Vaig conèixer a la Núria durant el segon semestre de 2018, quan feia el Màster en Neurociències a la Universitat de Barcelona. Núria em va acollir al seu grup, que es va convertir en casa meva en els darrers anys. Gràcies a la seva confiança i a tot el suport que m'ha donat, he pogut dedicar els darrers cinc anys a fer el que més m'agrada en el món: fer models bayesians i gràfiques amb R. També hem fet aquesta tesi pel camí. I si aquesta tesi existeix, és per tot el suport que la Núria em va donar: un suport acadèmic i administratiu que poques persones es troben. Amb la supervisió de la Núria he après una infinitat de coses: a ser més crític, a ser acurat en els detalls, a distingir el que és important i el que trivial, a utilitzar menys connectors en escriure, i a comparar la reproductibilitat d'un experiment amb la d'una truita de patata.
-    
+
     I want to thank the Oxford team for the time together designing experiments, arranging stimuli lists, interpreting analyses, and thinking in general. To Kim Plunkett for his time and advice. To Serene Siow, for being a great colleague and for always being ready to help. To Irina Lepadatu and Nicola Guillen for their help collecting and analysing the data, and to Mihaela Duta for making me feel so welcome in my brief visit. Quiero agradecer tambien a Daniela Avila-Varela por su tiempo y su ayuda disenando el cuestionario y recogiendo datos, y por echar una mano cuando lo necesitaba.
-    
+
     I walked this road in the company of a lot of great folks. I will mention you from shortest to tallest until I fail to remember your heights. To Ege. We have laughed together, cried together, drank together. We have also worked from time to time. Your company has made my life nothing but better in the last years. If my self esteem has resisted these years is thanks to you, since you---the smartest person I know---unironically asked me which part of the egg was the yolk, and which was the *white*. For that I will be forever grateful. Cok tesekur ederim, gercekten. To Chiara. For being my academic big sister and my mentor. I have looked up to you since the day you taught me about the Head-Turn Preference Procedure. I haven't stopped learning from you since then. To Konstantina, the fastest learner I know, and also a great researcher that I am so proud to call my friend. For the good days swimming in the streets of Potsdam,  
-    
+
     From here on I don't remember your heights, so the order is now arbitrary. To Devin, Alice, Carlota, Camille, Dimitris, Ane, Bernat, Judit, Farhad, Indre, Ed, Zoi, Valentina, Dani, Eider, Sofia Russo, Katerina, Manel, David. I have collected very good memories during these times, even during the hardest moments. You happen to be behind most of them. I hope we can make more of them soon. To Marc Colomer, Marc Gimeno, Joan, Jesús, Paola, Marc Lluís, Sànder, Andrea. For welcoming me to CBC, for just being there, or having fun at conferences. Whatever time we spent together left a good memory. To the SAP group, the ones now and the ones gone. For the conferences, the seminars, the discussions, and particularly the food.
-    
+
     A Xavi Mayoral, Sílvia Blanch, Katia Pistrin, Cristina Cuadrado, Pam Miller, i Núria Barrios. Sou la gent més important del CBC. Gràcies pel vostre suport.
-    
+
     A Nacho, Cris, Ali, Sol e Irene, y las muchas personas geniales que he desvirtualizado estos años. Os conocí en uno de los momentos mas difíciles de esta estapa, y me hicisteis crecer, aprender, y alegrarme cuando más lo necesitaba. Nos vemos pronto.
-    
+
     A la gente buena que conocí en el máster. A Fede, Niko, Romi, Pau, Cris. Por darme la bienvenida a Barcelona, y hacerme sentir como en casa, aunque fuera en un patio interior del Hospital Clìnic por la noche a 0$^{\circ}$.
-    
+
     A la Prof. Azucena Begega, quien me ofreció su tiempo, su paciencia, y su apoyo cuando me empecé a interesar por la investigación, allá por segundo de Psicología en la Universidad de Oviedo. Llegué a Barcelona animado por ella, y es una de las principales razones por las que esta tesis existe. Gracias a mis profesores del colegio, a quienes me enseñasteis a leer, a escribir, a sumar. Hoy devuelvo en esta tesis una pequeña parte de lo que me disteis.
-    
+
     A Javi, Tesa, Marta e Inés. Saber que estabáis ahí, y que nos veríamos pronto, aunque fuera unos pocos días al año, ha sido mi mayor privilegio estos años, y siempre lo será.
-    
+
     A mi familia. No ha habido un sólo día en el que me haya menos que tremendamente querido y apoyado. Por los buenos días, los malos días, por todos los dias, porque siempre os tengo conmigo
   abstract-english: |
     Bilingual infants acquire words at a similar rate as monolinguals infants, despite facing a more complex linguistic environment. The mechanisms underlying this achievement are unclear. We investigated the possible role of cognateness---form-similarity across translation equivalents (TEs)---as a facilitator of bilingual lexical growth. We first modelled the acquisition trajectories of TEs, and found a facilitation effect of cognateness, only in the language of lower exposure. We provided a mechanistic account for this effect, rooted in the language non-selective hypothesis of lexical access. We then tested the plausibility of a central assumption in this account: that bilingual infants activate TEs in both languages in parallel, even during monolingual situations. We used a primed word recognition task in which participants were tested in exclusively one of their languages, while we covertly manipulated the cognateness of the prime words. Overall, we provide insights into the role of language non-selectivity in the initial bilingual lexicon.
@@ -51,21 +51,21 @@ thesis:
     Els infants bilingües adquireixen paraules a un ritme comparable als monolingües, malgrat una exposició a un entorn lingüístic més complex. En aquesta tesi, investiguem el paper de la cognasticitat (similitud en forma entre traduccions equivalents o TEs) com a facilitador de l'expansió del lèxic. El modelatge de les trajectòries d'adquisició de les TEs, ha mostrat un efecte de facilitació de la cognasticitat a la llengua amb menor exposició. El resultats s’expliquen a través de la hipòtesi de l'accés lèxic no selectiu. Mitjançant una tasca de reconeixement de paraules a la que es va manipular la cognasticitat de las paraules experimentals de manera encoberta, s'ha posat a prova el pressupòsit de que els infants bilingües activen les TEs en ambdues llengües simultàniament en situacions monolingües. Aquesta tesi aporta coneixements significatius sobre el paper de la no-selectivitat lingüística en el lèxic inicial.
   preface: |
     Talking about *talking*---an activity sometimes referred to as *Linguistics*---is painfully difficult. Language is the most complex communicative system known, yet few people are surprised by the fact that infants pick it up so early in life, and so effortlessly. Some of those few intrigued people are developmentalists, whose scientific enterprise has kept a lucky bunch of them out of unemployment. For the last five years, I have been one of them. In this dissertation, I present some of the contributions that have resulted from these years.
-    
+
     We addressed the case of bilingual infants or infants being raised in two languages. In particular, we investigated how such dual language exposure impacts the emerge of a mental lexicon, where phonological and conceptual representations find each other. We focused on the case of bilingual language acquisition as an extension of the monolingual case, which may provide insights about how language acquisition is shaped by different experiences with language.
-    
+
     It is known to the developmentalist that the trajectories of language acquisition of different infants may diverge substantially. Some of the sources of this individual variability have been identified and are under investigation. Cross-linguistic differences is one of them. Infants learning two different languages may follow slightly different paths towards language acquisition. This is also the case for bilingual infants. An influential monograph by @floccia2018introduction showed that the specific pair of languages that a bilingual child is learning affects their trajectories of vocabulary growth. In particular, they found that 24-month-old bilinguals were able to produce more words when their languages were lexically more similar (e.g., English-Dutch), compared to when both languages were lexically less similar (e.g., English-Mandarin). The motivation of this dissertation is to investigate the mechanisms underlying such facilitation effect.
-    
+
     The first goal of this dissertation was to provide a mechanistic explanation to the effect found by @floccia2018introduction. We focused on the role of *cognates* (i.e., phonologically similar translation equivalents). We tested the hypothesis that cognate words are acquired earlier by children than non-cognate words. This would explain why participants in @floccia2018introduction who were learning lexically similar languages---sharing many cognates---had larger vocabulary sizes than those learning two languages with less lexical similarity---sharing fewer cognates. We first put forward the foundations of a model that involved the interaction between lexical frequency, quantitative language exposure, and cognateness, to generate a cognateness facilitation on word acquisition. We then designed a vocabulary questionnaire, the Barcelona Vocabulary Questionnaire (BVQ), which we used to collect vocabulary data from monolingual and bilingual participants living in the Metropolitan Area of Barcelona. These participants were learning Catalan and Spanish, two Romance languages that share high lexical similarity. We modelled comprehension and production estimates of a large sample of children to test the predictions of our model of word acquisition.
-    
+
     A second goal of this dissertation was to test the plausibility of a central assumption behind the model proposed in Chapter 2: that bilingual infants co-activate both languages during language exposure, even in monolingual situations. Previous studies had provided evidence in this direction, but had relied on paradigms in which participants were introduced into a bilingual environment while completing the task. We addressed this in Chapter 3. In collaboration with Prof. Kim Plunkett and Dr. Serene Siow, from the Universtity of Oxford, we designed an experimental task that would test the language non-selectivity of the developing bilingual lexicon in a purely monolingual context. For more than three years, we worked together, collecting data from a large cohort of monolinguals and bilinguals in both Oxford and Barcelona. Despite our efforts, methological complications kept us from being able to address the hypotheses of interest.
-    
+
     This was not the only setback we encounter during our research. The COVID-19 was an important set back for the project. First, it severely limited our access to participants for the experimental task in both locations. First, universities were completely shut down during the lock down imposed by the governments in both Spain and United Kingdom, meaning that access to laboratories was not possible, even for researchers. During these times, only online data collection could be conducted. Second, it became challenging to find participants, even after the lockdown was lifted. This was especially the case in Oxford, were bilingual participants were already hard to find. Some families did offer to us their time and interest, and took part in the testing sessions once the universities opened and the appropriate protocols were established. We are very grateful to them.
-    
+
     The timings and the aims of the project had to be adjusted to the circumstances. For instance, due to the tight schedule that we were left with after the lockdown, we decided to resume data collection in both laboratories in parallel. Initially, we planned to first conclude data collection in Oxford, were the original studies from which we adapted the experimental task were run. This would allow us to first replicate the original findings in the same population of monolinguals, making sure that the procedure would be an appropriate tool to test out hypotheses before moving to monolingual and bilingual infants in Barcelona. This was not possible. Unfortunately, we were unable to replicate the original findings, keeping us from drawing conclusions about our predictions in the experimental section of the present dissertation.
-    
+
     Despite the setbacks encountered during the collection and analysis of the experimental data in Chapter 3, I believe the present dissertation provides valuable insights into the early stages of the bilingual lexicon. In the discussion section, we elaborate on the these contributions, putting our thoretical proposal from Chapter 2, its assumptions, and its implications, in the center. We present this proporsal as the Accumulator Model of Bilingual Lexical Acquisition (AMBLA). We illustrate the rationale behind this model by simulating word acquisition trajectories that mirror the results obtained in Chapter 2. We conclude this dissertation with a discussion on future experimental and modelling work to follow the formalisation of AMBLA.
-    
+
     Throughout the preparation of this thesis, we put special attention into maximising transparency. The code used to run the experiments, and to collect and analyse the anonymised data, are accesible in the version-controlled GitHub repositories of their respective studies. I am aware that full computational reproducibility is not possible without a subtantial increase in the programming knowledge required from the reproducing researcher. I have made an effort to provide extensive documentation on the required steps for reproducing the analyses in this thesis. I have also made available a Docker image for each of the studies included in this dissertation. Opening this image should allow anyone to run the scripts in their local machine with all pre-installed dependencies in a relatively convenient way. Materials and results (e.g. heavy files, like model fits) are also available in the corresponding Open Science Framework repositories. The source code and materials used to write and render the present dissertation available in a stand-alone GitHub repository ([https://github.com/gongcastro/thesis](https://github.com/gongcastro/thesis)).
 format:
   upfthesis-pdf:
@@ -96,4 +96,3 @@ freeze: auto
 csl: "_assets/apa7.csl"
 bibliography:
   - "_assets/references.bib"
-  
