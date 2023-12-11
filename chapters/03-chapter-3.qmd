@@ -89,7 +89,13 @@ The implicit naming paradigm provides an ideal experimental paradigm to study th
 
 Following @mani2010infant, each trial in the task started with the silent presentation of a prime picture. Both monolingual and bilingual infants were expected to implicitly name the prime picture. According to the language non-selective hypothesis of lexical access, bilinguals should generate two labels for the prime picture, one in each language. To test this prediction, we manipulated the phonological similarity between the prime and the target words in both languages (see @fig-hypotheses). In *Related/Non-cognate* trials, prime and target labels shared phonological onset in only the language of test. For instance an infant tested in Catalan would be presented with a chair as prime picture ($\textbf{c}\text{adira}_{\text{CAT}}/\text{silla}_{\text{SPA}}$ [chair]) and with $\textbf{c}\text{ullera}_{\text{CAT}}$ [spoon] as target label. In line with @mani2011phonological, we anticipated that the phonological overlap between prime and target should modulate target word recognition in both monolinguals and bilinguals. This should be reflected in a delayed target looking preference, compared to *Unrelated* trials, in which prime and target did not share phonological onset. In *Related/Cognate* trials, the prime shared phonological onset with the target in both languages. For instance, the same infants tested in Catalan would be presented with a car as prime picture ($\textbf{c}\text{otxe}_{\text{CAT}}/\textbf{c}\text{oche}_{\text{SPA}}$) and with $\textbf{c}\text{ullera}_{\text{CAT}}$ [spoon] as target label. In bilinguals, parallel activation of the prime in both languages should increase the cohort of the target word, leading to stronger interference effects in this condition, compared to *Related/Non-cognate* and *Unrelated* trials.
 
+\newpage
+
+\blandscape
+
 ![Predicted priming effects (or their absence) in the *Related/Cognate*, *Related/Non-cognate*, and *Unrelated* conditions, with examples for a participant tested in Catalan. Words represent lexical representations. Lexical representations of the task-relevant language (Catalan) are depicted inside grey boxes. Solid arrows indicate within-language priming effects, and dashed lines indicate cross-language priming effects. In *Related/Cognate* (A) and *Related/Non-cognate* (B) trials, the recognition of the Catalan target word \textipa{ku"Le.R@} [spoon] is predicted to be modulated by the prior activation of the prime label in Catalan. In *Related/Cognate* trials, the parallel activation of the prime label in Spanish is predicted to increase the strength of the priming effect.](../_assets/img/hypotheses.png){#fig-hypotheses fig-align="center"}
+
+\elandscape
 
 In line with previous studies in monolinguals, we further predicted that the strength of the lexical interference effects in the *Related/Non-cognate* and *Related/Cognate* conditions would be associated with participants' vocabulary size. Target word recognition should be delayed by the activation of a larger cohort of phonologically related words [@mani2011phonological; @chow2017spokenword; @avila-varela2021longitudinal; @mayor2014infant]. We defined vocabulary size as the amount of words participants were reported to understand in their dominant language by their caregivers. The choice of the dominant language for calculating vocabulary sizes is due to several reasons. First, it allows a more fair comparison between monolinguals (who do not know any language other than their dominant language) and bilinguals (who may know words in a second language). Second, since participants were tested exclusively in their dominant language, their vocabulary size in the dominant language is more likely to be associated with participants' performance in the task. Third, previous work on word recognition in bilinguals suggests that vocabulary size in the dominant language predicts participants' performance better than total vocabulary (in which vocabulary sizes in both languages are summed together) [@marchman2010how].
 
@@ -103,7 +109,7 @@ In this study, we conducted a conceptual replication of @mani2010infant and @man
 
 ### Methods
 
-All materials, data, and reproducible code can be found at the OSF ([https://osf.io/hy984/](https://osf.io/ckydb/)) and GitHub (<https://github.com/gongcastro/cognate-priming>) repositories. This study was conducted according to guidelines laid down in the Declaration of Helsinki, and was approved by the Drug Research Ethical Committee (CEIm) of the IMIM Parc de Salut Mar, reference 2020/9080/I and the Medical Sciences Research Ethics Board at the University of Oxford, reference R60939/RE009. Before every testing session, caregivers were asked to read and sign an informed consent form, and were given a token of appreciation at the end of it.
+All materials, data, and reproducible code can be found at the OSF ([https://osf.io/hy984/](https://osf.io/ckydb/)) and GitHub (<https://github.com/gongcastro/cognate-priming>) repositories. For reproducibility, a Docker image of the RStudio session is available on DockerHub (<https://hub.docker.com/repository/docker/gongcastro/cognate-priming/>). This study was conducted according to guidelines laid down in the Declaration of Helsinki, and was approved by the Drug Research Ethical Committee (CEIm) of the IMIM Parc de Salut Mar, reference 2020/9080/I and the Medical Sciences Research Ethics Board at the University of Oxford, reference R60939/RE009. Before every testing session, caregivers were asked to read and sign an informed consent form, and were given a token of appreciation at the end of it.
 
 #### Participants
 
@@ -899,7 +905,7 @@ n_items <- bvq_data$pool |>
 n_categories <- n_distinct(bvq_data$pool$semantic_category)
 ```
 
-We collected vocabulary data using parental responses to the Barcelona Vocabulary Questionnaire [BVQ, @garcia-castro2023bvq], an online vocabulary checklist developed to assess the vocabulary size of Catalan-Spanish bilingual toddlers, and inspired in several adaptations of the the Communicative Developmental Inventory [CDI, @fenson1994variability]. This questionnaire has four versions, each including a different but overlapping subset of words, from a total pool of `r n_pool` words from `r n_categories` functional-semantic categories. Each version included a Catalan and a Spanish vocabulary checklist. Catalan checklists contained between `r n_items$min[1]` and `r n_items$min[2]` words, and Spanish checklists contained between `r n_items$min[2]` and `r n_items$min[2]` words (see the Methods section of Chapter 1 for a detailed description of the questionnaire). Participants were randomly allocated to one of the four versions. Recurrent participants were always allocated to the same version. Families received a link to the BVQ immediately after each experimental session, and were given two weeks to fill it. It is common for children living in the Metropolitan area of Barcelona to be exposed to both Catalan and Spanish in some degree, even monolinguals. For this reason, we collected Catalan *and* Spanish vocabulary data from all participants in Study 2, but for consistency with Study 1, we calculated vocabulary sizes for participants in Study 2 as the number of words that caregivers reported their child to *understand* or *understand and say* only in the dominant language of the child (i.e., the language of test).
+We collected vocabulary data using parental responses to the Barcelona Vocabulary Questionnaire [BVQ, @garcia-castro2023bvq], an online vocabulary checklist developed to assess the vocabulary size of Catalan-Spanish bilingual toddlers, and inspired by several adaptations of the Communicative Developmental Inventory [CDI, @fenson1994variability]. This questionnaire has four versions, each including a different but overlapping subset of words, from a total pool of `r n_pool` words from `r n_categories` functional-semantic categories. Each version included a Catalan and a Spanish vocabulary checklist. Catalan checklists contained between `r n_items$min[1]` and `r n_items$min[2]` words, and Spanish checklists contained between `r n_items$min[2]` and `r n_items$min[2]` words (see the Methods section of Chapter 1 for a detailed description of the questionnaire). Participants were randomly allocated to one of the four versions. Recurrent participants were always allocated to the same version. Families received a link to the BVQ immediately after each experimental session, and were given two weeks to fill it. It is common for children living in the Metropolitan area of Barcelona to be exposed to both Catalan and Spanish in some degree, even monolinguals. For this reason, we collected Catalan *and* Spanish vocabulary data from all participants in Study 2, but for consistency with Study 1, we calculated vocabulary sizes for participants in Study 2 as the number of words that caregivers reported their child to *understand* or *understand and say* only in the dominant language of the child (i.e., the language of test).
 
 `r english::Words(n_imputed)` (`r prop_imputed`) families failed to provide a complete response to the vocabulary checklist within the two-week time limit. We imputed missing vocabulary size scores using single imputation, taking the vocabulary size scores of a pool of `r n_pool` additional participants for which a successful response for the questionnaire had been gathered. We used participants' age in months and their language profile (monolingual or bilingual) as predictors. We used the `mice` R package [@vanbuuren2011mice] to perform imputation using the Bayesian linear regression method (see @sec-appendix-e).
 
@@ -1001,7 +1007,7 @@ n_longitudinal <- attrition_bcn |>
 
 After excluding trials that matched any of the aforementioned criteria from the dataset, we excluded participants who did not provide at least two valid trials in each experimental condition (*n* = `r n_exc_participants`), and participants with a dominant-language vocabulary size lower than 10% (which depending on the version of the vocabulary questionnaire they were allocated to, varied from `r floor(min(n_items$min)*0.1)` and `r floor(max(n_items$max)*0.1)`)  (*n* = `r n_exc_participants_vocab`). The final dataset included `r format(n_trials_valid, big.mark = ",")` trials from `r n_sessions_valid` testing sessions, generated by `r format(n_participants_valid, big.mark = ",")` distinct participants. Of those participants, `r n_longitudinal[1, 2]` provided data from one experimental session, and `r n_longitudinal[2, 2]` provided data from two experimental sessions.
 
-**Modelling approach**. We modelled the data following a similar approach as in Study 1, with the main difference that participants' language profile (*Group*) was now included as a predictor in the model, in interaction with the *Condition* predictor. We set two *a priori* contrasts for the *Condition* predictor: one comparing *Unrelated* and *Related/Non-cognate* trials (sum-coded as `-0.5` and `+0.5`, with *Related/Cognate* trials coded as `0`), and another comparing *Related/Non-cognate* and *Related/Cognate* trials (sum-coded as `-0.5` and `+0.5`, with *Unrelated* trials coded as `0`). In Study 2, the base model $\mathcal{M}_0$ included the the main effects of *Age*, *Condition*, and *Group*, and the two-way interaction between the *Condition* and  *Group* predictors. Contrast coding of the *Condition* predictor was the same as in Study 1. We set one *a priori* contrasts for the *Group* predictor, comparing *Monolingual* with *Bilingual* participants (sum-coded as `-0.5` and `+0.5`, respectively). To model the time course of target looking, we included B-splines for the main effect of *Time*, and for the two-way interaction between *Condition* and *Group*.
+**Modelling approach**. We modelled the data following a similar approach as in Study 1, with the main difference that participants' language profile (*Group*) was now included as a predictor in the model, in interaction with the *Condition* predictor. We set two *a priori* contrasts for the *Condition* predictor: one comparing *Unrelated* and *Related/Non-cognate* trials (sum-coded as `-0.5` and `+0.5`, with *Related/Cognate* trials coded as `0`), and another comparing *Related/Non-cognate* and *Related/Cognate* trials (sum-coded as `-0.5` and `+0.5`, with *Unrelated* trials coded as `0`). In Study 2, the base model $\mathcal{M}_0$ included the main effects of *Age*, *Condition*, and *Group*, and the two-way interaction between the *Condition* and  *Group* predictors. Contrast coding of the *Condition* predictor was the same as in Study 1. We set one *a priori* contrasts for the *Group* predictor, comparing *Monolingual* with *Bilingual* participants (sum-coded as `-0.5` and `+0.5`, respectively). To model the time course of target looking, we included B-splines for the main effect of *Time*, and for the two-way interaction between *Condition* and *Group*.
 
 **Statistical inference**. Same procedure as in Study 1.
 
@@ -1277,113 +1283,7 @@ A second possibility is that participants successfully retrieved a detailed phon
 
 Third, and most likely, the modifications of the implicit naming task in the present investigation might have reduced the chances of detecting the anticipated effects. The most critical difference between the original design of the implicit naming task by Mani and Plunkett and that of the present study is the absence of a pre-naming phase during the test phase. Target auditory labels were presented immediately after the offset of the prime picture. It is possible that such time interval was too short for participants to retrieve the phonological label of the prime picture before the target was presented. Such failure to generate phonological word-forms for prime labels would have prevented participants in Studies 1 and 2 from being affected by phonological priming effects during target word recognition.
 
-
-```{r fig-mp}
-#| label: fig-mp
-#| fig-cap: "Distribution of lexical frequencies and word familiarity at 18 months for the stimuli in Mani and Plunkett (2010, 2011), and in Study 1. A) Lexical frequencies (expressed as Zipf scores) for prime and target words. Lexical frequences are shown for related and unrelated primes separately. B) Word familiarity scores for prime and target words, calculated as the proportion of participants in the OCDI norms that were reported by their caregivers to understand the word. Word familiarity scores are shown for related and unrelated primes separately."
-#| fig-width: 7
-#| fig-height: 3
-mp <- read_csv(here("data", "03-chapter-3", "data", "mp-stimuli.csv"),
-			   show_col_types = FALSE)
-
-mp_means <- mp |>
-	dplyr::filter(role != "distractor") |>
-	mutate(condition = if_else(role == "target",
-							   "related/unrelated", 
-							   condition)) |>
-	summarise(aoa_sd = sd(aoa, na.rm = TRUE),
-			  aoa = mean(aoa, na.rm = TRUE),
-			  freq_sd = sd(freq),
-			  freq = mean(freq),
-			  .by = c(role, condition, study))
-
-mp |>
-	dplyr::filter(role != "distractor") |>
-	mutate(condition = if_else(role == "target",
-							   "related/unrelated", condition
-	)) |>
-	ggplot(aes(condition, freq, colour = study, fill = study)) +
-	facet_wrap(~role, scales = "free_x") +
-	ggdist::geom_dots(
-		side = "both",
-		layout = "swarm",
-		fill = "white",
-		stroke = 1,
-		position = position_dodge(width = 1),
-		alpha = 1 / 3
-	) +
-	stat_summary(
-		geom = "errorbar",
-		fun.data = mean_se,
-		width = 0.1,
-		linewidth = 1 / 2,
-		position = position_dodge(width = 1)
-	) +
-	stat_summary(
-		geom = "point",
-		fun = mean,
-		size = 1.5,
-		position = position_dodge(width = 1)
-	) +
-	labs(
-		x = "Role",
-		y = "Lexical frequency (Zipf)",
-		colour = "Study",
-		fill = "Study"
-	) +
-	mp |>
-	dplyr::filter(role != "distractor") |>
-	mutate(condition = if_else(role == "target",
-							   "related/unrelated", condition
-	)) |>
-	ggplot(aes(condition, aoa, colour = study, fill = study)) +
-	facet_wrap(~role, scales = "free_x") +
-	ggdist::geom_dots(
-		side = "both",
-		layout = "swarm",
-		fill = "white",
-		stroke = 1,
-		position = position_dodge(width = 1),
-		alpha = 1 / 5
-	) +
-	stat_summary(
-		geom = "errorbar",
-		fun.data = mean_se,
-		width = 0.1,
-		linewidth = 1 / 2,
-		position = position_dodge(width = 1)
-	) +
-	stat_summary(
-		geom = "point",
-		fun = mean,
-		size = 1.5,
-		position = position_dodge(width = 1)
-	) +
-	labs(
-		x = "Role",
-		y = "Familiarity at 18 months",
-		colour = "Study",
-		fill = "Study"
-	) +
-	scale_y_continuous(
-		labels = scales::percent,
-		limits = c(0, 1)
-	) +
-	plot_layout(nrow = 1, guides = "collect") &
-	plot_annotation(tag_levels = "A") &
-	theme(
-		legend.position = "top",
-		legend.title = element_blank(),
-		axis.title.x = element_blank(),
-		panel.grid.major.y = element_line(
-			colour = "grey",
-			linetype = "dotted"
-		)
-	)
-```
-
-
-A difference in the difficulty of the stimuli might have influenced the results in the present study, compared to those of the original studies. When designing the stimuli lists, we considered three variables as indices of word difficult during recognition: lexical frequency, age of acquisition, and number of phonemes. The distribution of the three variables was equivalent across the three experimental conditions (see @tbl-stimuli), so it is unlikely that such differences cancelled out a possible priming effect. However, the stricter limitations under which we build the stimuli lists, might have lead to out stimuli lists including more difficult words than in the original study by @mani2010infant. We examined this possibility by comparing the distributions of the English words included in Study 1, with those included in @mani2010infant and @mani2011phonological (stimuli lists are identical in both studies). @fig-mp shows a comparison between the stimuli lists of the three studies in lexical frequency and word familiarity at 18 months. Overall, words included in Mani and Plunkett and in Study 1 have equivalent lexical frequency, and are know by a similar proportion of English monolinguals infants, according to the OCDI norms. This is the case for prime and target words across the related and the unrelated conditions. It is therefore unlikely that the lack of priming effects in Study 1 is due to an increased difficulty in the items included.
+A difference in the difficulty of the stimuli might have influenced the results in the present study, compared to those of the original studies. When designing the stimuli lists, we considered three variables as indices of word difficult during recognition: lexical frequency, age of acquisition, and number of phonemes. The distribution of the three variables was equivalent across the three experimental conditions (see @tbl-stimuli), so it is unlikely that such differences cancelled out a possible priming effect. However, the stricter limitations under which we build the stimuli lists, might have lead to out stimuli lists including more difficult words than in the original study by @mani2010infant. This possibility is unlikely, given that the distribution of lexical frequencies and word familiarity (proportion of children reported to have acquired each word at 18 months, according to OCDI norms) was equivalent for the stimuli lists of Study 1 and those of @mani2010infant and @mani2011phonological. It is therefore unlikely that the lack of priming effects in Study 1 is due to an increased difficulty in the items included.
 
 ```{r discussion-oxf-vocab}
 oxf_vocab <- vocabulary |>
