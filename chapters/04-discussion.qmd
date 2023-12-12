@@ -59,7 +59,7 @@ y_{ij}&: \text{ Learning instances with word } j \text{ accumulated by child } i
 \end{aligned}
 $${#eq-ambla}
 
-The third variable is the child's relative exposure to the language to which the word belongs to ($\text{Exposure}_{ij}$): children will accumulate learning instances with words from their higher-exposure language faster than with words from their lower-exposure language. This variable takes values from 0 (the child does not receive any exposure to this language) to 1 (the child only receives exposure to this language). The child's degree of exposure to all languages must sum up to one. Finally, the fourth variable is the amount of phonological similarity between the two TEs ($\text{Cognateness}_j$). This score ranges from 0 (no similarity) to 1 (identical cognates), and is calculated using the Levenshtein similarity, as in @sec-chapter2 (see @eq-lev).
+The third variable is the child's relative exposure to the language to which the word belongs to ($\text{Exposure}_{ij}$): the child will accumulate learning instances with words from their higher-exposure language faster than with words from their lower-exposure language. This variable takes values from 0 (the child does not receive any exposure to this language) to 1 (the child only receives exposure to this language). The child's degree of exposure to all languages must sum up to one. Finally, the fourth variable is the amount of phonological similarity between the two TEs ($\text{Cognateness}_j$). This score ranges from 0 (no similarity) to 1 (identical cognates), and is calculated using the Levenshtein similarity, as in @sec-chapter2 (see @eq-lev).
 
 $$
 \begin{aligned}
