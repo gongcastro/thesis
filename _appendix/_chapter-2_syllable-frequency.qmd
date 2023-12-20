@@ -196,20 +196,7 @@ syll |>
 		  legend.position = "none")
 ```
 
-To estimate the association between word-level syllabic frequency and cognateness, while controlling for the number of syllables in the word, (an increment in the number of syllables necessarily increases the summed syllabic frequency of the word), we fit a multilevel, Bayesian linear regression model with syllabic frequency (the sum of the syllabic frequency of the syllables in a word) as response variable, and the main effect of the number of syllables ($Syllables$) and $Cognateness$ [Levenshtein similarity between a word and its translation equivalent, @levenshtein1966binary] as predictors. We added translation equivalent-level random effects for the intercept and the main effect of $Syllables$ (some translation pairs had a different number of syllables in each language). We used a Gaussian distribution to model syllabic frequency scores after standardising this variable and the predictors. We used a weakly informative prior for all parameters involved in the model (see @eq-model-syllables for a formal equation of this model and its prior). We conducted statistical inference by evaluating the proportion of the 95% highest density interval (HDI) of the posterior posterior distribution of each coefficient that fell into the region of practical equivalence [ROPE, see the main manuscript for a more detailed explanation, @kruschke2018bayesian].
-
-$$
-\begin{aligned}
-y &\sim \mathcal{N}(\mu, \sigma)\\
-\mu &= (\beta_0 + u_{0_{i}}) + (\beta_1 + u_{1_{i}}) \text{Syllables} + \beta_2 \text{Cognateness} \\
-\beta_{0-3} &\sim \mathcal{N}(0, 10) \\
-u_{{0-1}_{i}} &\sim \mathcal{N}(0, \sigma_{u_i}) \\
-\sigma_y & \sim \text{Exponential}(2)\\
-\sigma_{u_{0-1}} &\sim \mathcal{N_{+}}(1, 0.1) \\
-\rho_{u} &\sim \text{LKJcorr}(2) \\
-\end{aligned}
-$$ {#eq-model-syllables}
-
+To estimate the association between word-level syllabic frequency and cognateness, while controlling for the number of syllables in the word, (an increment in the number of syllables necessarily increases the summed syllabic frequency of the word), we fit a multilevel, Bayesian linear regression model with syllabic frequency (the sum of the syllabic frequency of the syllables in a word) as response variable, and the main effect of the number of syllables (*Syllables*) and *Cognateness* [Levenshtein similarity between a word and its translation equivalent, @levenshtein1966binary] as predictors. We added translation equivalent-level random effects for the intercept and the main effect of *Syllables* (some translation pairs had a different number of syllables in each language). We used a Gaussian distribution to model syllabic frequency scores after standardising this variable and the predictors. We used a weakly informative prior for all parameters involved in the model. We conducted statistical inference by evaluating the proportion of the 95% highest density interval (HDI) of the posterior posterior distribution of each coefficient that fell into the region of practical equivalence [ROPE, see the main manuscript for a more detailed explanation, @kruschke2018bayesian].
 
 ```{r syllables-posterior}
 #| label: syllables-posterior
@@ -309,6 +296,7 @@ ggplot(syll_plot_data, aes(lv_std, .epred)) +
 		 colour = "Number of syllables") +
 	scale_y_continuous(n.breaks = 8) +
 	theme(panel.grid = element_blank(),
+	      axis.text.x = element_text(size = 8),
 		  legend.position = "top")
 ```
 
